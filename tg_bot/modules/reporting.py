@@ -150,7 +150,7 @@ def report(bot: Bot, update: Update) -> str:
                     if chat.username and chat.type == Chat.SUPERGROUP:
                         bot.send_message(admin.user.id,
                                          msg + link,
-                                         parse_mode=ParseMode.MARKDOWN,
+                                         parse_mode=ParseMode.HTML,
                                          reply_markup=reply_markup)
 
                         if should_forward:
