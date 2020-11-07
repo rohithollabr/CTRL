@@ -87,7 +87,7 @@ def check_afk(bot, update, user_id, fst_name):
             res = "{} is AFK!".format(fst_name)
         else:
             res = "{} is AFK!.\nReason: <code>{}</code>".format(html.escape(fst_name), html.escape(user.reason))
-        update.effective_message.reply_text(res, parse_mode="html")
+        update.effective_message.reply_text(res, parse_mode=ParseMode.HTML)
 
 
 def __user_info__(user_id):
