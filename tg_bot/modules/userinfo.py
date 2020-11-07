@@ -63,7 +63,8 @@ def about_bio(bot: Bot, update: Update, args: List[str]):
 
     if info:
         update.effective_message.reply_text("*{}*:\n{}".format(user.first_name, escape_markdown(info)),
-                                            parse_mode=ParseMode.MARKDOWN)
+                                            parse_mode=ParseMode.MARKDOWN,
+                                            disable_web_page_preview=True)
     elif message.reply_to_message:
         username = user.first_name
         update.effective_message.reply_text("{} No details about him have been added yet !".format(username))
