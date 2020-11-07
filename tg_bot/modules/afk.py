@@ -18,7 +18,6 @@ AFK_REPLY_GROUP = 8
 
 @run_async
 def afk(bot: Bot, update: Update):
-    chat = update.effective_chat  # type: Optional[Chat]
     args = update.effective_message.text.split(None, 1)
     if len(args) >= 2:
         reason = args[1]
@@ -27,13 +26,12 @@ def afk(bot: Bot, update: Update):
 
     sql.set_afk(update.effective_user.id, reason)
     fname = update.effective_user.first_name
-    update.effective_message.reply_text(chat.id, f"{fname} is now AFK!")
+    update.effective_message.reply_text(f"{fname} is now AFK!")
 
 
 @run_async
 def no_longer_afk(bot: Bot, update: Update):
     user = update.effective_user  # type: Optional[User]
-    chat = update.effective_chat  # type: Optional[Chat]
 
     if not user:  # ignore channels
         return
@@ -42,7 +40,7 @@ def no_longer_afk(bot: Bot, update: Update):
     if res:
         firstname = update.effective_user.first_name
         try:
-            update.effective_message.reply_text(chat.id, f"{firstname} is no longer AFK!")
+            update.effective_message.reply_text(f"{firstname} is no longer AFK!")
         except:
             return
 
