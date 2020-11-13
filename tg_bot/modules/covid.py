@@ -41,7 +41,7 @@ def covindia(bot: Bot, update: Update):
             parse_mode = ParseMode.MARKDOWN,
             disable_web_page_preview = True
         )
-@run_async
+
 def covid(bot: Bot, update: Update):
     message = update.effective_message
     device = message.text[len('/covid '):]
