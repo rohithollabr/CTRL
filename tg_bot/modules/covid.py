@@ -65,8 +65,7 @@ def covid(bot: Bot, update: Update):
         return
 
     elif fetch.status_code == 404:
-        reply_text = "The API is currently down."
-    message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
+    message.reply_text("API is currently down!")
 
 __help__ = """
  - /covid: get worldwide corona status
