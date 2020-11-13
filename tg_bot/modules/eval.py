@@ -19,6 +19,7 @@ import traceback
 from contextlib import redirect_stdout
 
 from telegram import ParseMode
+from tg_bot.modules.helper_funcs.chat_status import sudo_user
 from telegram.ext import CommandHandler, run_async
 
 from tg_bot import dispatcher, LOGGER
