@@ -75,6 +75,6 @@ __help__ = """
 __mod_name__ = 'COVID-19'
 
 COV_INDIA_HANDLER = DisableAbleCommandHandler('covindia', covindia)
-COVID_HANDLER = DisableAbleCommandHandler("covid", covid)
+COVID_HANDLER = DisableAbleCommandHandler('covid', covid)
 dispatcher.add_handler(COVID_HANDLER)
 dispatcher.add_handler(COV_INDIA_HANDLER)
