@@ -60,12 +60,12 @@ def covid(bot: Bot, update: Update):
         "Total Deaths: `" + str(total_deaths_global) + "`\n"
         "Total Recovered: `" + str(total_recovered_global) +"`\n"
         "Active Cases: `"+ str(active_cases_covid19) + "`")
-        message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
+        message.reply_text("API is currently down")
 
         return
 
     elif fetch.status_code == 404:
-    message.reply_text("API is currently down!")
+        message.reply_text("API is currently down!")
 
 __help__ = """
  - /covid: get worldwide corona status
