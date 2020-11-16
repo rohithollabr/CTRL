@@ -39,7 +39,7 @@ def allow_connections(bot: Bot, update: Update, args: List[str]) -> str:
         update.effective_message.reply_text("Please enter on/yes/off/no in group!")
 
 @run_async
-def connection_chat(bot, update, args):
+def connection_chat(bot: Bot, update: Update):
 
     chat = update.effective_chat
     user = update.effective_user
