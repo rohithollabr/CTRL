@@ -62,7 +62,7 @@ def connection_chat(bot: Bot, update: Update):
         message = "You are currently connected to {}.\n".format(chat_name)
     else:
         message = "You are currently not connected to any group.\n"
-    send_message(update.effective_message, message parse_mode=ParseMode.MARKDOWN)
+    send_message(update.effective_message, message, parse_mode=ParseMode.MARKDOWN)
 
 @run_async
 @typing_action
