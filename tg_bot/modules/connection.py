@@ -20,7 +20,6 @@ from tg_bot.modules.keyboard import keyboard
 
 @user_admin
 @run_async
-@typing_action
 def allow_connections(bot: Bot, update: Update, args: List[str]) -> str:
     chat = update.effective_chat  # type: Optional[Chat]
     if chat.type != chat.PRIVATE:
@@ -41,7 +40,6 @@ def allow_connections(bot: Bot, update: Update, args: List[str]) -> str:
         update.effective_message.reply_text("Please enter on/yes/off/no in group!")
 
 @run_async
-@typing_action
 def connection_chat(bot: Bot, update: Update):
 
     chat = update.effective_chat
@@ -65,7 +63,6 @@ def connection_chat(bot: Bot, update: Update):
     send_message(update.effective_message, message, parse_mode=ParseMode.MARKDOWN)
 
 @run_async
-@typing_action
 def connect_chat(bot, update, args):
     chat = update.effective_chat  # type: Optional[Chat]
     user = update.effective_user  # type: Optional[User]
