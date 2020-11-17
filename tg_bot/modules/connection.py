@@ -261,7 +261,7 @@ def connect_button(bot, update):
 
             if connection_status:
                 conn_chat = dispatcher.bot.getChat(
-                    connected(context.bot, update, chat, user.id, need_admin=False)
+                    connected(bot, update, chat, user.id, need_admin=False)
                 )
                 chat_name = conn_chat.title
                 query.message.edit_text(
