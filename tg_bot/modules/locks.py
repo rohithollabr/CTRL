@@ -93,8 +93,9 @@ def unrestr_members(bot, chat_id, members, messages=True, media=True, other=True
 
 @run_async
 @connection_status
+msg = update.effective_message
 def locktypes(bot: Bot, update: Update):
-    update.effective_message.reply_text("\n - ".join(["Locks: "] + list(LOCK_TYPES) + list(RESTRICTION_TYPES)))
+    msg.reply_text("\n - ".join(["Locks: "] + list(LOCK_TYPES) + list(RESTRICTION_TYPES)))
 
 
 @user_admin
