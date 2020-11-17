@@ -236,7 +236,7 @@ def list_notes(bot: Bot, update: Update):
 
 def __import_data__(chat_id, data):
     failures = []
-    for notename, notedata in data.get('extra'():
+    for notename, notedata in data.get('extra'):
         match = FILE_MATCHER.match(notedata)
 
         if match:
