@@ -18,11 +18,11 @@ def typing_action(func):
     """Sends typing action while processing func command."""
 
     @wraps(func)
-    def command_func(bot, update, *args, **kwargs):
+    def command_func(bot, Update, *args, **kwargs):
         context.bot.send_chat_action(
             chat_id=update.effective_chat.id, action=ChatAction.TYPING
         )
-        return func(bot,update, *args, **kwargs)
+        return func(bot, Update, *args, **kwargs)
 
     return command_func
 
@@ -55,7 +55,7 @@ def connection_status(func):
         if conn:
             chat = dispatcher.bot.getChat(conn)
             update.__setattr__("_effective_chat", chat)
-            return func(bot, update, *args, **kwargs)
+            return func(bot, Update, *args, **kwargs)
         else:
             if update.effective_message.chat.type == "private":
                 update.effective_message.reply_text(
@@ -63,7 +63,7 @@ def connection_status(func):
                 )
                 return connected_status
 
-            return func(bot, update, *args, **kwargs)
+            return func(bot, Update, *args, **kwargs)
 
     return connected_status
 
