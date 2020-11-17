@@ -3,7 +3,7 @@ from functools import wraps
 from telegram import User, Chat, ChatMember, Update, Bot
 from telegram import error, ChatAction
 
-from tg_bot import DEL_CMDS, SUDO_USERS
+from tg_bot import DEL_CMDS, SUDO_USERS, dispatcher
 
 
 def send_message(message, text,  *args,**kwargs):
