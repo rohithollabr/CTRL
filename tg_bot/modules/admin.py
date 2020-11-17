@@ -194,18 +194,34 @@ def unpin(bot: Bot, update: Update) -> str:
 @bot_admin
 @user_admin
 def invite(bot: Bot, update: Update):
-    chat = update.effective_chat  # type: Optional[Chat]
+    user = update.effective_user
+    msg = update.effective_message
+    chat = update.effective_chat
+
+    conn = connected(bot, update, chat, user.id, need_admin=True)
+    if conn:
+        chat = dispatcher.bot.getChat(conn)
+    else:
+        if msg.chat.type == "private":
+            msg.reply_text("This command is meant to use in chat not in PM")
+            return ""
+        chat = update.effective_chat
+
     if chat.username:
-        update.effective_message.reply_text(chat.username)
+        msg.reply_text(chat.username)
     elif chat.type == chat.SUPERGROUP or chat.type == chat.CHANNEL:
         bot_member = chat.get_member(bot.id)
         if bot_member.can_invite_users:
             invitelink = bot.exportChatInviteLink(chat.id)
-            update.effective_message.reply_text(invitelink)
+            msg.reply_text(invitelink)
         else:
-            update.effective_message.reply_text("I don't have access to the invite link, try changing my permissions!")
+            msg.reply_text(
+                "I don't have access to the invite link, try changing my permissions!"
+            )
     else:
-        update.effective_message.reply_text("I can only give you invite links for supergroups and channels, sorry!")
+        msg.reply_text(
+            "I can only give you invite links for supergroups and channels, sorry!"
+        )
 
 
 @run_async
@@ -260,7 +276,7 @@ __mod_name__ = "Admin"
 PIN_HANDLER = CommandHandler("pin", pin, pass_args=True, filters=Filters.group)
 UNPIN_HANDLER = CommandHandler("unpin", unpin, filters=Filters.group)
 
-INVITE_HANDLER = CommandHandler("invitelink", invite, filters=Filters.group)
+INVITE_HANDLER = CommandHandler("invitelink", invite) #, filters=Filters.group)
 
 PROMOTE_HANDLER = CommandHandler("promote", promote, pass_args=True, filters=Filters.group)
 DEMOTE_HANDLER = CommandHandler("demote", demote, pass_args=True, filters=Filters.group)
