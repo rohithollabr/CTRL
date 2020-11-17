@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from telegram import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram import Message, Chat, Update, Bot, User
-from telegram.error import BadRequest, Unauthorised
+from telegram.error import BadRequest, Unauthorized
 from telegram.ext import CommandHandler, Filters
 from telegram.ext import run_async, CallbackQueryHandler
 from telegram.utils.helpers import mention_html
