@@ -17,7 +17,7 @@ from tg_bot.modules.helper_funcs.chat_status import can_delete, is_user_admin, u
 from tg_bot.modules.helper_funcs.filters import CustomFilters
 from tg_bot.modules.log_channel import loggable
 from tg_bot.modules.sql import users_sql
-from tg_bot.modules.helper_funcs.alternate import connection_status
+from tg_bot.modules.helper_funcs.alternate import connection_status, send_message
 
 LOCK_TYPES = {'sticker': Filters.sticker,
               'audio': Filters.audio,
@@ -95,7 +95,7 @@ def unrestr_members(bot, chat_id, members, messages=True, media=True, other=True
 @connection_status
 def locktypes(bot: Bot, update: Update):
     msg = update.effective_message
-    msg.reply_text("\n - ".join(["Locks: "] + list(LOCK_TYPES) + list(RESTRICTION_TYPES)))
+    send_message("\n - ".join(["Locks: "] + list(LOCK_TYPES) + list(RESTRICTION_TYPES)))
 
 
 @user_admin
