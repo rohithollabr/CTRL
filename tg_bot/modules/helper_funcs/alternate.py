@@ -63,7 +63,7 @@ def connection_status(func):
                 )
                 return connected_status
 
-            return func(bot, Update, *args, **kwargs)
+            return func(bot, *args, **kwargs)
 
     return connected_status
 
