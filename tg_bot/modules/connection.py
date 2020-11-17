@@ -180,7 +180,7 @@ def connect_chat(bot, update, args):
                 )
                 try:
                     sql.add_history_conn(user.id, str(chat.id), chat_name)
-                    context.bot.send_message(
+                    bot.send_message(
                         update.effective_message.from_user.id,
                         "You are connected to *{}*.".format(
                             chat_name
