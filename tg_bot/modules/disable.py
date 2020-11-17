@@ -181,7 +181,23 @@ if is_module_loaded(FILENAME):
     @run_async
     def commands(bot: Bot, update: Update):
         chat = update.effective_chat
-        update.effective_message.reply_text(build_curr_disabled(chat.id), parse_mode=ParseMode.MARKDOWN)
+        user = update.effective_user
+        conn = connected(bot, update, chat, user.id, need_admin=True)
+        if conn:
+            chat = dispatcher.bot.getChat(conn)
+            chat_id = conn
+        else:
+            if update.effective_message.chat.type == "private":
+                send_message(
+                    update.effective_message,
+                    "This command is meant to use in group not in PM",
+                )
+                return ""
+            chat = update.effective_chat
+            chat_id = update.effective_chat.id
+
+        text = build_curr_disabled(chat.id)
+        send_message(update.effective_message, text, parse_mode=ParseMode.MARKDOWN)
 
 
     def __stats__():
@@ -207,9 +223,9 @@ if is_module_loaded(FILENAME):
  - /listcmds: list all possible toggleable commands
     """
 
-    DISABLE_HANDLER = CommandHandler("disable", disable, pass_args=True, filters=Filters.group)
-    ENABLE_HANDLER = CommandHandler("enable", enable, pass_args=True, filters=Filters.group)
-    COMMANDS_HANDLER = CommandHandler(["cmds", "disabled"], commands, filters=Filters.group)
+    DISABLE_HANDLER = CommandHandler("disable", disable, pass_args=True) #, filters=Filters.group)
+    ENABLE_HANDLER = CommandHandler("enable", enable, pass_args=True) #, filters=Filters.group)
+    COMMANDS_HANDLER = CommandHandler(["cmds", "disabled"], commands) #, filters=Filters.group)
     TOGGLE_HANDLER = CommandHandler("listcmds", list_cmds, filters=Filters.group)
 
     dispatcher.add_handler(DISABLE_HANDLER)
