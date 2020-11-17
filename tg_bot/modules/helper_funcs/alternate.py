@@ -43,7 +43,7 @@ def send_action(action):
 def connection_status(func):
 
     @wraps(func)
-    def connected_status(bot, Update, *args,
+    def connected_status(bot, *args,
                          **kwargs):
         conn = connected(
             bot,
