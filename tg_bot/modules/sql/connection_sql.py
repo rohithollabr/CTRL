@@ -124,3 +124,88 @@ def disconnect(user_id):
         else:
             SESSION.close()
             return False
+
+def add_history_conn(user_id, chat_id, chat_name):
+    global HISTORY_CONNECT
+    with CONNECTION_HISTORY_LOCK:
+        conn_time = int(time.time())
+        if HISTORY_CONNECT.get(int(user_id)):
+            counting = (
+                SESSION.query(ConnectionHistory.user_id)
+                .filter(ConnectionHistory.user_id == str(user_id))
+                .count()
+            )
+            getchat_id = {}
+            for x in HISTORY_CONNECT[int(user_id)]:
+                getchat_id[HISTORY_CONNECT[int(user_id)][x]["chat_id"]] = x
+            if chat_id in getchat_id:
+                todeltime = getchat_id[str(chat_id)]
+                delold = SESSION.query(ConnectionHistory).get(
+                    (int(user_id), str(chat_id))
+                )
+                if delold:
+                    SESSION.delete(delold)
+                    HISTORY_CONNECT[int(user_id)].pop(todeltime)
+            elif counting >= 5:
+                todel = list(HISTORY_CONNECT[int(user_id)])
+                todel.reverse()
+                todel = todel[4:]
+                for x in todel:
+                    chat_old = HISTORY_CONNECT[int(user_id)][x]["chat_id"]
+                    delold = SESSION.query(ConnectionHistory).get(
+                        (int(user_id), str(chat_old))
+                    )
+                    if delold:
+                        SESSION.delete(delold)
+                        HISTORY_CONNECT[int(user_id)].pop(x)
+        else:
+            HISTORY_CONNECT[int(user_id)] = {}
+        delold = SESSION.query(ConnectionHistory).get((int(user_id), str(chat_id)))
+        if delold:
+            SESSION.delete(delold)
+        history = ConnectionHistory(int(user_id), str(chat_id), chat_name, conn_time)
+        SESSION.add(history)
+        SESSION.commit()
+        HISTORY_CONNECT[int(user_id)][conn_time] = {
+            "chat_name": chat_name,
+            "chat_id": str(chat_id),
+        }
+
+
+def get_history_conn(user_id):
+    if not HISTORY_CONNECT.get(int(user_id)):
+        HISTORY_CONNECT[int(user_id)] = {}
+    return HISTORY_CONNECT[int(user_id)]
+
+
+def clear_history_conn(user_id):
+    global HISTORY_CONNECT
+    todel = list(HISTORY_CONNECT[int(user_id)])
+    for x in todel:
+        chat_old = HISTORY_CONNECT[int(user_id)][x]["chat_id"]
+        delold = SESSION.query(ConnectionHistory).get((int(user_id), str(chat_old)))
+        if delold:
+            SESSION.delete(delold)
+            HISTORY_CONNECT[int(user_id)].pop(x)
+    SESSION.commit()
+    return True
+
+
+def __load_user_history():
+    global HISTORY_CONNECT
+    try:
+        qall = SESSION.query(ConnectionHistory).all()
+        HISTORY_CONNECT = {}
+        for x in qall:
+            check = HISTORY_CONNECT.get(x.user_id)
+            if check == None:
+                HISTORY_CONNECT[x.user_id] = {}
+            HISTORY_CONNECT[x.user_id][x.conn_time] = {
+                "chat_name": x.chat_name,
+                "chat_id": x.chat_id,
+            }
+    finally:
+        SESSION.close()
+
+
+__load_user_history()
