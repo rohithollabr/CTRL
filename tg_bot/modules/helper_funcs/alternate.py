@@ -47,7 +47,6 @@ def connection_status(func):
                          **kwargs):
         conn = connected(
             bot,
-            update,
             update.effective_chat,
             update.effective_user.id,
             need_admin=False)
