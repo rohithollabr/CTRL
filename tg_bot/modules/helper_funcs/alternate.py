@@ -2,7 +2,6 @@ from functools import wraps
 
 from telegram import User, Chat, ChatMember, Update, Bot
 from telegram import error, ChatAction
-from telegram.ext import CallbackContext
 
 from tg_bot import DEL_CMDS, SUDO_USERS
 
@@ -44,7 +43,7 @@ def send_action(action):
 def connection_status(func):
 
     @wraps(func)
-    def connected_status(bot, Update, CallbackContext, *args,
+    def connected_status(bot, Update, *args,
                          **kwargs):
         conn = connected(
             bot,
