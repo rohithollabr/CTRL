@@ -251,7 +251,7 @@ def connect_button(bot, update):
 
     if connect_match:
         target_chat = connect_match.group(1)
-        getstatusadmin = context.bot.get_chat_member(target_chat, query.from_user.id)
+        getstatusadmin = bot.get_chat_member(target_chat, query.from_user.id)
         isadmin = getstatusadmin.status in ("administrator", "creator")
         ismember = getstatusadmin.status in ("member")
         isallow = sql.allow_connect_to_chat(target_chat)
@@ -265,7 +265,7 @@ def connect_button(bot, update):
                 )
                 chat_name = conn_chat.title
                 query.message.edit_text(
-                    "Successfully connected to *{}*. \nUse `/helpconnect` to check available commands.".format(
+                    "Successfully connected to *{}*.".format(
                         chat_name
                     ),
                     parse_mode=ParseMode.MARKDOWN,
