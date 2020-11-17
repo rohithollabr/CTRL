@@ -2,6 +2,7 @@ from functools import wraps
 
 from telegram import User, Chat, ChatMember, Update, Bot
 from telegram import error, ChatAction
+from telegram.ext import CallbackContext
 
 from tg_bot import DEL_CMDS, SUDO_USERS
 
@@ -38,3 +39,37 @@ def send_action(action):
         return command_func
 
     return decorator
+
+
+def connection_status(func):
+
+    @wraps(func)
+    def connected_status(bot, Update, CallbackContext, *args,
+                         **kwargs):
+        conn = connected(
+            bot,
+            update,
+            update.effective_chat,
+            update.effective_user.id,
+            need_admin=False)
+
+        if conn:
+            chat = dispatcher.bot.getChat(conn)
+            update.__setattr__("_effective_chat", chat)
+            return func(bot, update, *args, **kwargs)
+        else:
+            if update.effective_message.chat.type == "private":
+                update.effective_message.reply_text(
+                    "Send /connect in a group that you and I have in common first."
+                )
+                return connected_status
+
+            return func(bot, update, *args, **kwargs)
+
+    return connected_status
+
+
+# Workaround for circular import with connection.py
+from tg_bot.modules import connection
+
+connected = connection.connected
