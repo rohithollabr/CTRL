@@ -297,6 +297,7 @@ __help__ = """
 Actions are available with connected groups:
  • View and edit notes
  • View and edit filters
+ • Enable and Disable commands in chat.
  • More in future!
 
  - /connect <chatid>: Connect to remote chat
