@@ -55,7 +55,7 @@ def connection_status(func):
         if conn:
             chat = dispatcher.bot.getChat(conn)
             update.__setattr__("_effective_chat", chat)
-            return func(update: bot, *args, **kwargs)
+            return func(update, bot, *args, **kwargs)
         else:
             if update.effective_message.chat.type == "private":
                 update.effective_message.reply_text(
@@ -63,7 +63,7 @@ def connection_status(func):
                 )
                 return connected_status
 
-            return func(update, *args, **kwargs)
+            return func(update, bot, *args, **kwargs)
 
     return connected_status
 
