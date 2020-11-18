@@ -25,7 +25,7 @@ def promote(bot: Bot, update: Update, args: List[str]) -> str:
     user = update.effective_user  # type: Optional[User]
     chat = update.effective_chat  # type: Optional[Chat]
     conn = connected(bot, update, chat, user.id)
-    if not conn == False:
+    if conn != False:
         chatD = dispatcher.bot.getChat(conn)
     else:
         chatD = update.effective_chat
@@ -43,7 +43,7 @@ def promote(bot: Bot, update: Update, args: List[str]) -> str:
         return ""
 
     user_member = chatD.get_member(user_id)
-    if user_member.status == 'administrator' or user_member.status == 'creator':
+    if user_member.status in ['administrator', 'creator']:
         message.reply_text(tld(chat.id, "How am I meant to promote someone that's already an admin?"))
         return ""
 
@@ -80,7 +80,7 @@ def demote(bot: Bot, update: Update, args: List[str]) -> str:
     message = update.effective_message  # type: Optional[Message]
     user = update.effective_user  # type: Optional[User]
     conn = connected(bot, update, chat, user.id)
-    if not conn == False:
+    if conn != False:
         chatD = dispatcher.bot.getChat(conn)
     else:
         chatD = update.effective_chat
@@ -102,7 +102,7 @@ def demote(bot: Bot, update: Update, args: List[str]) -> str:
         message.reply_text(tld(chat.id, "This person CREATED the chat, how would I demote them?"))
         return ""
 
-    if not user_member.status == 'administrator':
+    if user_member.status != 'administrator':
         message.reply_text(tld(chat.id, "Can't demote what wasn't promoted!"))
         return ""
 
@@ -141,25 +141,23 @@ def demote(bot: Bot, update: Update, args: List[str]) -> str:
 @user_admin
 @loggable
 def pin(bot: Bot, update: Update, args: List[str]) -> str:
-    user = update.effective_user  # type: Optional[User]
     chat = update.effective_chat  # type: Optional[Chat]
 
-    is_group = chat.type != "private" and chat.type != "channel"
+    is_group = chat.type not in ["private", "channel"]
 
     prev_message = update.effective_message.reply_to_message
 
     is_silent = True
     if len(args) >= 1:
-        is_silent = not (args[0].lower() == 'notify' or args[0].lower() == 'loud' or args[0].lower() == 'violent')
+        is_silent = args[0].lower() not in ['notify', 'loud', 'violent']
 
     if prev_message and is_group:
         try:
             bot.pinChatMessage(chat.id, prev_message.message_id, disable_notification=is_silent)
         except BadRequest as excp:
-            if excp.message == "Chat_not_modified":
-                pass
-            else:
+            if excp.message != "Chat_not_modified":
                 raise
+        user = update.effective_user  # type: Optional[User]
         return "<b>{}:</b>" \
                "\n#PINNED" \
                "\n<b>Admin:</b> {}".format(html.escape(chat.title), mention_html(user.id, user.first_name))
@@ -179,9 +177,7 @@ def unpin(bot: Bot, update: Update) -> str:
     try:
         bot.unpinChatMessage(chat.id)
     except BadRequest as excp:
-        if excp.message == "Chat_not_modified":
-            pass
-        else:
+        if excp.message != "Chat_not_modified":
             raise
 
     return "<b>{}:</b>" \
@@ -194,18 +190,34 @@ def unpin(bot: Bot, update: Update) -> str:
 @bot_admin
 @user_admin
 def invite(bot: Bot, update: Update):
-    chat = update.effective_chat  # type: Optional[Chat]
+    user = update.effective_user
+    msg = update.effective_message
+    chat = update.effective_chat
+
+    conn = connected(bot, update, chat, user.id, need_admin=True)
+    if conn:
+        chat = dispatcher.bot.getChat(conn)
+    else:
+        if msg.chat.type == "private":
+            msg.reply_text("This command is meant to use in chat not in PM")
+            return ""
+        chat = update.effective_chat
+
     if chat.username:
-        update.effective_message.reply_text(chat.username)
-    elif chat.type == chat.SUPERGROUP or chat.type == chat.CHANNEL:
+        msg.reply_text(chat.username)
+    elif chat.type in [chat.SUPERGROUP, chat.CHANNEL]:
         bot_member = chat.get_member(bot.id)
         if bot_member.can_invite_users:
             invitelink = bot.exportChatInviteLink(chat.id)
-            update.effective_message.reply_text(invitelink)
+            msg.reply_text(invitelink)
         else:
-            update.effective_message.reply_text("I don't have access to the invite link, try changing my permissions!")
+            msg.reply_text(
+                "I don't have access to the invite link, try changing my permissions!"
+            )
     else:
-        update.effective_message.reply_text("I can only give you invite links for supergroups and channels, sorry!")
+        msg.reply_text(
+            "I can only give you invite links for supergroups and channels, sorry!"
+        )
 
 
 @run_async
@@ -260,7 +272,7 @@ __mod_name__ = "Admin"
 PIN_HANDLER = CommandHandler("pin", pin, pass_args=True, filters=Filters.group)
 UNPIN_HANDLER = CommandHandler("unpin", unpin, filters=Filters.group)
 
-INVITE_HANDLER = CommandHandler("invitelink", invite, filters=Filters.group)
+INVITE_HANDLER = CommandHandler("invitelink", invite) #, filters=Filters.group)
 
 PROMOTE_HANDLER = CommandHandler("promote", promote, pass_args=True, filters=Filters.group)
 DEMOTE_HANDLER = CommandHandler("demote", demote, pass_args=True, filters=Filters.group)
