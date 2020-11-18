@@ -31,15 +31,14 @@ def blacklist(bot: Bot, update: Update, args: List[str]):
     else:
         if chat.type == "private":
             return
-        else:
-            chat_id = update.effective_chat.id
-            chat_name = chat.title
+        chat_id = update.effective_chat.id
+        chat_name = chat.title
 
     filter_list = "Current blacklisted words in <b>{}</b>:\n".format(chat_name)
 
     all_blacklisted = sql.get_chat_blacklist(chat_id)
 
-    if len(args) > 0 and args[0].lower() == "copy":
+    if args and args[0].lower() == "copy":
         for trigger in all_blacklisted:
             filter_list += "<code>{}</code>\n".format(html.escape(trigger))
     else:
@@ -83,8 +82,13 @@ def add_blacklist(bot: Bot, update: Update):
     if len(words) > 1:
         text = words[1]
         to_blacklist = list(
-            set(trigger.strip() for trigger in text.split("\n") if trigger.strip())
+            {
+                trigger.strip()
+                for trigger in text.split("\n")
+                if trigger.strip()
+            }
         )
+
         for trigger in to_blacklist:
             sql.add_to_blacklist(chat_id, trigger.lower())
 
@@ -135,8 +139,13 @@ def unblacklist(bot: Bot, update: Update):
     if len(words) > 1:
         text = words[1]
         to_unblacklist = list(
-            set(trigger.strip() for trigger in text.split("\n") if trigger.strip())
+            {
+                trigger.strip()
+                for trigger in text.split("\n")
+                if trigger.strip()
+            }
         )
+
         successful = 0
         for trigger in to_unblacklist:
             success = sql.rm_from_blacklist(chat_id, trigger.lower())
@@ -207,9 +216,7 @@ def del_blacklist(bot: Bot, update: Update):
             try:
                 message.delete()
             except BadRequest as excp:
-                if excp.message == "Message to delete not found":
-                    pass
-                else:
+                if excp.message != "Message to delete not found":
                     LOGGER.exception("Error while deleting blacklist message.")
             break
 

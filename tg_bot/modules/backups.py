@@ -165,7 +165,6 @@ def export_data(bot: Bot, update: Update, chat_data):
 
     note_list = sql.get_all_chat_notes(chat_id)
     backup = {}
-    notes = {}
     # button = ""
     buttonlist = []
     namacat = ""
@@ -223,10 +222,9 @@ def export_data(bot: Bot, update: Update, chat_data):
             )
         else:
             isicat += "{}<###splitter###>".format(note.value)
-    for x in range(count):
-        notes["#{}".format(namacat.split("<###splitter###>")[x])] = "{}".format(
+    notes = {"#{}".format(namacat.split("<###splitter###>")[x]): "{}".format(
             isicat.split("<###splitter###>")[x]
-        )
+        ) for x in range(count)}
     # Rules
     rules = rulessql.get_rules(chat_id)
     # Blacklist
@@ -324,9 +322,8 @@ def export_data(bot: Bot, update: Update, chat_data):
         },
     }
     baccinfo = json.dumps(backup, indent=4)
-    f = open("CTRL{}.backup".format(chat_id), "w")
-    f.write(str(baccinfo))
-    f.close()
+    with open("CTRL{}.backup".format(chat_id), "w") as f:
+        f.write(str(baccinfo))
     bot.sendChatAction(current_chat_id, "upload_document")
     tgl = time.strftime("%H:%M:%S - %d/%m/%Y", time.localtime(time.time()))
     try:
@@ -354,20 +351,16 @@ def export_data(bot: Bot, update: Update, chat_data):
 
 # Temporary data
 def put_chat(chat_id, value, chat_data):
-	# print(chat_data)
-	if value == False:
-		status = False
-	else:
-		status = True
-	chat_data[chat_id] = {'backups': {"status": status, "value": value}}
+    	# print(chat_data)
+    status = value != False
+    chat_data[chat_id] = {'backups': {"status": status, "value": value}}
 
 def get_chat(chat_id, chat_data):
-	# print(chat_data)
-	try:
-		value = chat_data[chat_id]['backups']
-		return value
-	except KeyError:
-		return {"status": False, "value": False}
+    	# print(chat_data)
+    try:
+        return chat_data[chat_id]['backups']
+    except KeyError:
+    	return {"status": False, "value": False}
 
 
 __mod_name__ = "Backups"
