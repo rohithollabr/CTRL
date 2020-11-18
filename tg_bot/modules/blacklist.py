@@ -11,7 +11,7 @@ import tg_bot.modules.sql.blacklist_sql as sql
 from tg_bot import dispatcher, LOGGER
 from tg_bot.modules.disable import DisableAbleCommandHandler
 from tg_bot.modules.helper_funcs.chat_status import user_admin, user_not_admin
-from tg_bot.modules.helper_funcs.extraction import extract_text
+from tg_bot.modules.helper_funcs.extraction import extract_text, extract_time
 from tg_bot.modules.helper_funcs.misc import split_message
 from tg_bot.modules.log_channel import loggable
 from tg_bot.modules.warns import warn
