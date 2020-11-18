@@ -1,5 +1,6 @@
 import telegram.ext as tg
 from telegram import Update
+import tg_bot.modules.sql.global_bans_sql as sql
 
 CMD_STARTERS = ('/', '!')
 
@@ -14,12 +15,16 @@ class CustomCommandHandler(tg.CommandHandler):
         if (isinstance(update, Update)
                 and (update.message or update.edited_message and self.allow_edited)):
             message = update.message or update.edited_message
+            if sql.is_user_gbanned(update.effective_user.id):
+                return False
 
             if message.text and len(message.text) > 1:
                 fst_word = message.text_html.split(None, 1)[0]
                 if len(fst_word) > 1 and any(fst_word.startswith(start) for start in CMD_STARTERS):
                     command = fst_word[1:].split('@')
                     command.append(message.bot.username)  # in case the command was sent without a username
+                    if not (command[0].lower() in self.command and command[1].lower() == message.bot.username.lower()):
+                        return False
                     if self.filters is None:
                         res = True
                     elif isinstance(self.filters, list):

@@ -26,7 +26,8 @@ def about_me(bot: Bot, update: Update, args: List[str]):
 
     if info:
         update.effective_message.reply_text("*{}*:\n{}".format(user.first_name, escape_markdown(info)),
-                                            parse_mode=ParseMode.MARKDOWN)
+                                            parse_mode=ParseMode.MARKDOWN,
+                                            disable_web_page_preview=True)
     elif message.reply_to_message:
         username = message.reply_to_message.from_user.first_name
         update.effective_message.reply_text(username + "Information about him is currently unavailable !")
@@ -63,7 +64,8 @@ def about_bio(bot: Bot, update: Update, args: List[str]):
 
     if info:
         update.effective_message.reply_text("*{}*:\n{}".format(user.first_name, escape_markdown(info)),
-                                            parse_mode=ParseMode.MARKDOWN)
+                                            parse_mode=ParseMode.MARKDOWN,
+                                            disable_web_page_preview=True)
     elif message.reply_to_message:
         username = user.first_name
         update.effective_message.reply_text("{} No details about him have been added yet !".format(username))
@@ -82,7 +84,7 @@ def set_about_bio(bot: Bot, update: Update):
             message.reply_text("Are you looking to change your own ... ?? That 's it.")
             return
         elif user_id == bot.id and sender.id not in SUDO_USERS:
-            message.reply_text(" Only SUDO USERS can change my information.")
+            message.reply_text(" Only BOT Sudos can change my information.")
             return
         elif user_id == OWNER_ID:
             message.reply_text("You ain't setting my master bio LMAO😂.")

@@ -1,4 +1,5 @@
 from typing import Optional
+import html
 
 from telegram import Message, Update, Bot, User
 from telegram import MessageEntity, ParseMode
@@ -10,7 +11,6 @@ from tg_bot.modules.disable import DisableAbleCommandHandler, DisableAbleRegexHa
 from tg_bot.modules.sql import afk_sql as sql
 from tg_bot.modules.users import get_user_id
 
-from tg_bot.modules.translations.strings import tld
 
 AFK_GROUP = 7
 AFK_REPLY_GROUP = 8
@@ -18,7 +18,6 @@ AFK_REPLY_GROUP = 8
 
 @run_async
 def afk(bot: Bot, update: Update):
-    chat = update.effective_chat  # type: Optional[Chat]
     args = update.effective_message.text.split(None, 1)
     if len(args) >= 2:
         reason = args[1]
@@ -27,13 +26,12 @@ def afk(bot: Bot, update: Update):
 
     sql.set_afk(update.effective_user.id, reason)
     fname = update.effective_user.first_name
-    update.effective_message.reply_text(tld(chat.id, f"{fname} is now AFK!"))
+    update.effective_message.reply_text(f"{fname} is now AFK!")
 
 
 @run_async
 def no_longer_afk(bot: Bot, update: Update):
     user = update.effective_user  # type: Optional[User]
-    chat = update.effective_chat  # type: Optional[Chat]
 
     if not user:  # ignore channels
         return
@@ -42,7 +40,7 @@ def no_longer_afk(bot: Bot, update: Update):
     if res:
         firstname = update.effective_user.first_name
         try:
-            update.effective_message.reply_text(tld(chat.id, f"{firstname} is no longer AFK!"))
+            update.effective_message.reply_text(f"{firstname} is no longer AFK!")
         except:
             return
 
@@ -81,15 +79,29 @@ def reply_afk(bot: Bot, update: Update):
 
 
 def check_afk(bot, update, user_id, fst_name):
-    chat = update.effective_chat  # type: Optional[Chat]
     if sql.is_afk(user_id):
         user = sql.check_afk_status(user_id)
         if not user.reason:
-            res = tld(chat.id, f"{fst_name} is AFK!")
+            res = "{} is AFK!".format(fst_name)
         else:
-            res = tld(chat.id, f"{fst_name} is AFK! says its because of:\n{user.reason}")
-        update.effective_message.reply_text(res)
+            res = "{} is AFK!.\nReason: <code>{}</code>".format(html.escape(fst_name), html.escape(user.reason))
+        update.effective_message.reply_text(res, parse_mode=ParseMode.HTML)
 
+
+def __user_info__(user_id):
+    is_afk = sql.is_afk(user_id)
+
+    text = "<b>Currently AFK</b>: {}"
+    if is_afk:
+        text = text.format("Yes")
+
+    else:
+        text = text.format("No")
+    return text
+
+
+def __gdpr__(user_id):
+    sql.rm_afk(user_id)
 
 __help__ = """
  - /afk <reason>: mark yourself as AFK.

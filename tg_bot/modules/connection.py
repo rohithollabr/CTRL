@@ -12,6 +12,7 @@ from telegram.utils.helpers import mention_html
 
 import tg_bot.modules.sql.connection_sql as sql
 from tg_bot import dispatcher, LOGGER, SUDO_USERS
+from tg_bot.modules.helper_funcs.alternate import send_message, typing_action
 from tg_bot.modules.helper_funcs.chat_status import bot_admin, user_admin, is_user_admin, can_restrict
 from tg_bot.modules.helper_funcs.extraction import extract_user, extract_user_and_text
 from tg_bot.modules.helper_funcs.string_handling import extract_time
@@ -39,6 +40,28 @@ def allow_connections(bot: Bot, update: Update, args: List[str]) -> str:
     else:
         update.effective_message.reply_text("Please enter on/yes/off/no in group!")
 
+@run_async
+def connection_chat(bot: Bot, update: Update):
+
+    chat = update.effective_chat
+    user = update.effective_user
+
+    conn = connected(bot, update, chat, user.id, need_admin=True)
+
+    if conn:
+        chat = dispatcher.bot.getChat(conn)
+        chat_name = dispatcher.bot.getChat(conn).title
+    else:
+        if update.effective_message.chat.type != "private":
+            return
+        chat = update.effective_chat
+        chat_name = update.effective_message.chat.title
+
+    if conn:
+        message = "You are currently connected to {}.\n".format(chat_name)
+    else:
+        message = "You are currently not connected to any group.\n"
+    send_message(update.effective_message, message, parse_mode=ParseMode.MARKDOWN)
 
 @run_async
 def connect_chat(bot, update, args):
@@ -297,19 +320,24 @@ Actions are available with connected groups:
  • Export and Imports of chat backup.
  • More in future!
 
+
  - /connect: Connects to chat (Can be done in a group by /connect or /connect <chat id> in PM)
- - /disconnect: Disconnect from chat
+  - /disconnect: Disconnect from chat
  - /allowconnect on/yes/off/no: Allow connect users to group
 """
+
+
 
 __mod_name__ = "Connections"
 
 CONNECT_CHAT_HANDLER = CommandHandler("connect", connect_chat, allow_edited=True, pass_args=True)
 DISCONNECT_CHAT_HANDLER = CommandHandler("disconnect", disconnect_chat, allow_edited=True)
+CONNECTION_CHAT_HANDLER = CommandHandler("connection", connection_chat, allow_edited=True)
 ALLOW_CONNECTIONS_HANDLER = CommandHandler("allowconnect", allow_connections, allow_edited=True, pass_args=True)
 CONNECT_BTN_HANDLER = CallbackQueryHandler(connect_button, pattern=r"connect")
 
 dispatcher.add_handler(CONNECT_CHAT_HANDLER)
+dispatcher.add_handler(CONNECTION_CHAT_HANDLER)
 dispatcher.add_handler(DISCONNECT_CHAT_HANDLER)
 dispatcher.add_handler(ALLOW_CONNECTIONS_HANDLER)
 dispatcher.add_handler(CONNECT_BTN_HANDLER)

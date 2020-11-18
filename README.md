@@ -15,15 +15,17 @@ You can also tap the Deploy To Heroku button below to deploy straight to Heroku!
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)  
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/843cdeb7f4124dd39eb3930939478259)](https://app.codacy.com/manual/AVATARX0TIC/ctrl?utm_source=github.com&utm_medium=referral&utm_content=AVATARX0TIC/ctrl&utm_campaign=Badge_Grade_Dashboard)
 
+[![CODE SIZE](https://img.shields.io/github/languages/code-size/AVATARX0TIC/CTRL?style=for-the-badge)
 
 [![GitHub forks](https://img.shields.io/github/forks/AVATARX0TIC/ctrl.svg?style=social&label=Fork&maxAge=2592000)](https://GitHub.com/AVATARX0TIC/ctrl/network/) [![GitHub stars](https://img.shields.io/github/stars/AVATARX0TIC/ctrl.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/AVATARX0TIC/ctrl/stargazers/)
+
 
 ![CTRL_LOGO](https://i.ibb.co/HDtRGFq/1587897297749.jpg)
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/AVATARX0TIC/CTRL)
 
 
-Alternatively, [find me on telegram](https://t.me/the_userbot.)
+Alternatively, [find me on telegram](https://t.me/refundisillegal.)
 
 ## Starting the bot.
 
@@ -69,9 +71,9 @@ If you can't have a config.py file (EG on heroku), it is also possible to use en
 The following env variables are supported:
  - `ENV`: Setting this to ANYTHING will enable env variables
 
- - `TOKEN`: Your bot token, as a string.
- - `OWNER_ID`: An integer of consisting of your owner ID
- - `OWNER_USERNAME`: Your username
+ - `TOKEN`: Your bot token, as a string. [@BotFather](https://telegram.dog/BotFather)
+ - `OWNER_ID`: An integer of consisting of your owner ID. Get from [@userinfobot](https://telegram.dog/userinfobot)
+ - `OWNER_USERNAME`: Your username. Get from [@userinfobot](https://telegram.dog/userinfobot)
 
  - `DATABASE_URL`: Your database URL
  - `MESSAGE_DUMP`: optional: a chat where your replied saved messages are stored, to stop people deleting their old 

@@ -101,6 +101,10 @@ def unmute(bot: Bot, update: Update, args: List[str]) -> str:
         return ""
 
     member = chatD.get_member(int(user_id))
+    
+    if member.status != "restricted":
+        message.reply_text(f"This user already has the right to speak in {chatD.title}.")
+        return ""
 
     if member.status != 'kicked' and member.status != 'left':
         if member.can_send_messages and member.can_send_media_messages \
@@ -300,6 +304,10 @@ def media(bot: Bot, update: Update, args: List[str]) -> str:
         return ""
 
     member = chatD.get_member(int(user_id))
+    
+    if member.status != "restricted":
+        message.reply_text(f"This user is already have rights to send media in {chatD.title}.")
+        return ""
 
     if member.status != 'kicked' and member.status != 'left':
         if member.can_send_messages and member.can_send_media_messages \

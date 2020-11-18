@@ -1,11 +1,7 @@
-import html
+import html, re, json
 from io import BytesIO
 from typing import Optional, List
-import random
-import uuid
-import re
-import json
-import time
+import random, uuid, time
 from time import sleep
 
 from future.utils import string_types
@@ -85,7 +81,7 @@ def new_fed(bot: Bot, update: Update):
 
 		x = sql.new_fed(user.id, fed_name, fed_id)
 		if not x:
-			update.effective_message.reply_text("Failed to create federation! Head over to @PhoenixSupport to notify us of the error.")
+			update.effective_message.reply_text("Failed to create federation! Head over to @CtrlSupport to notify us of the error.")
 			return
 
 		update.effective_message.reply_text("*You have successfully created a new federation!*"\
@@ -95,7 +91,7 @@ def new_fed(bot: Bot, update: Update):
 											"\n`/joinfed {}`".format(fed_name, fed_id, fed_id), parse_mode=ParseMode.MARKDOWN)
 		try:
 			bot.send_message(MESSAGE_DUMP,
-				"Federation <b>{}</b> has been created with ID: <pre>{}</pre>".format(fed_name, fed_id), parse_mode=ParseMode.HTML)
+				"Federation <b>{}</b> has been created with ID: <pre>{}</pre> by <code>{}</code>".format(fed_name, fed_id, user.id), parse_mode=ParseMode.HTML)
 		except:
 			LOGGER.warning("Cannot send a message to MESSAGE_DUMP")
 	else:

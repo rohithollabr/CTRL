@@ -1,0 +1,7 @@
+tg_bot/config.py
+*.pyc
+.idea/
+*.backup
+sticker.png
+kangsticker.png
+kangsticker
