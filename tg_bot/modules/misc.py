@@ -10,7 +10,7 @@ from io import BytesIO
 from requests import get
 from random import randint
 from telegram import Message, Chat, Update, Bot, MessageEntity, ParseMode
-from tg_bot.modules.helper_funcs.alternate import send_message, typing_action
+from tg_bot.modules.helper_funcs.alternate import send_message
 
 
 from telegram.error import BadRequest
