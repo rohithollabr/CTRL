@@ -321,9 +321,12 @@ Actions are available with connected groups:
  • More in future!
 
 
- - /connect: Connects to chat (Can be done in a group by /connect or /connect <chat id> in PM)
-  - /disconnect: Disconnect from chat
- - /allowconnect on/yes/off/no: Allow connect users to group
+ • /connect: Connects to chat (Can be done in a group by /connect or /connect <chat id> in PM)
+ • /connection: List connected chats
+ • /disconnect: Disconnect from a chat
+
+*Admin only:*
+ • /allowconnect <yes/no>: allow a user to connect to a chat
 """
 
 
