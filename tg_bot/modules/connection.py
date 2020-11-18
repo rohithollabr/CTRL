@@ -297,6 +297,7 @@ __help__ = """
 Actions are available with connected groups:
  • View and edit notes
  • View and edit filters
+ • Get invite link of chat.
  • Enable and Disable commands in chat.
  • Set and control AntiFlood settings.
  • Set and control Blacklist settings.
