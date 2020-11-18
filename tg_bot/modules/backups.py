@@ -120,68 +120,121 @@ def import_data(bot: Bot, update):
 @run_async
 @user_admin
 def export_data(bot: Bot, update: Update, chat_data):
-	msg = update.effective_message  # type: Optional[Message]
-	user = update.effective_user  # type: Optional[User]
+    chat_data = bot.chat_data
+    msg = update.effective_message  # type: Optional[Message]
+    user = update.effective_user  # type: Optional[User]
+    chat_id = update.effective_chat.id
+    chat = update.effective_chat
+    current_chat_id = update.effective_chat.id
+    conn = connected(bot, update, chat, user.id, need_admin=True)
+    if conn:
+        chat = dispatcher.bot.getChat(conn)
+        chat_id = conn
+        # chat_name = dispatcher.bot.getChat(conn).title
+    else:
+        if update.effective_message.chat.type == "private":
+            update.effective_message.reply_text(
+                "This command can only be used on group, not PM"
+            )
+            return ""
+        chat = update.effective_chat
+        chat_id = update.effective_chat.id
+        # chat_name = update.effective_message.chat.title
 
-	chat_id = update.effective_chat.id
-	chat = update.effective_chat
-	current_chat_id = update.effective_chat.id
+    jam = time.time()
+    new_jam = jam + 10800
+    checkchat = get_chat(chat_id, chat_data)
+    if checkchat.get("status"):
+        if jam <= int(checkchat.get("value")):
+            timeformatt = time.strftime(
+                "%H:%M:%S %d/%m/%Y", time.localtime(checkchat.get("value"))
+            )
+            update.effective_message.reply_text(
+                "You can only backup once a day!\nYou can backup again in about `{}`".format(
+                    timeformatt
+                ),
+                parse_mode=ParseMode.MARKDOWN,
+            )
+            return
+        else:
+            if user.id != OWNER_ID:
+                put_chat(chat_id, new_jam, chat_data)
+    else:
+        if user.id != OWNER_ID:
+            put_chat(chat_id, new_jam, chat_data)
 
-	conn = connected(bot, update, chat, user.id, need_admin=True)
-	if conn:
-		chat = dispatcher.bot.getChat(conn)
-		chat_id = conn
-		chat_name = dispatcher.bot.getChat(conn).title
-	else:
-		if update.effective_message.chat.type == "private":
-			update.effective_message.reply_text("This command can only be used on group, not PM")
-			return ""
-		chat = update.effective_chat
-		chat_id = update.effective_chat.id
-		chat_name = update.effective_message.chat.title
-
-	note_list = sql.get_all_chat_notes(chat_id)
-	backup = {}
-	notes = {}
-	button = ""
-	buttonlist = []
-	namacat = ""
-	isicat = ""
-	rules = ""
-	count = 0
-	countbtn = 0
-	# Backuping notes
-	note_list = notesql.get_all_chat_notes(chat_id)
-	notes = []
-	for note in note_list:
-		buttonlist = ""
-		note_tag = note.name
-		note_type = note.msgtype
-		getnote = notesql.get_note(chat_id, note.name)
-		if not note.value:
-			note_data = ""
-		else:
-			tombol = notesql.get_buttons(chat_id, note_tag)
-			keyb = []
-			buttonlist = ""
-			for btn in tombol:
-				if btn.same_line:
-					buttonlist += "[{}](buttonurl:{}:same)\n".format(btn.name, btn.url)
-				else:
-					buttonlist += "[{}](buttonurl:{})\n".format(btn.name, btn.url)
-			note_data = "{}\n\n{}".format(note.value, buttonlist)
-		note_file = note.file
-		if not note_file:
-			note_file = ""
-		notes.append({"note_tag": note_tag, "note_data": note_data, "note_file": note_file, "note_type": note_type})
-	# Rules
-	rules = rulessql.get_rules(chat_id)
-	# Blacklist
-	bl = list(blacklistsql.get_chat_blacklist(chat_id))
-	# Disabled command
-	disabledcmd = list(disabledsql.get_all_disabled(chat_id))
-	# Filters (TODO)
-	"""
+    note_list = sql.get_all_chat_notes(chat_id)
+    backup = {}
+    notes = {}
+    # button = ""
+    buttonlist = []
+    namacat = ""
+    isicat = ""
+    rules = ""
+    count = 0
+    countbtn = 0
+    # Notes
+    for note in note_list:
+        count += 1
+        # getnote = sql.get_note(chat_id, note.name)
+        namacat += "{}<###splitter###>".format(note.name)
+        if note.msgtype == 1:
+            tombol = sql.get_buttons(chat_id, note.name)
+            # keyb = []
+            for btn in tombol:
+                countbtn += 1
+                if btn.same_line:
+                    buttonlist.append(
+                        ("{}".format(btn.name), "{}".format(btn.url), True)
+                    )
+                else:
+                    buttonlist.append(
+                        ("{}".format(btn.name), "{}".format(btn.url), False)
+                    )
+            isicat += "###button###: {}<###button###>{}<###splitter###>".format(
+                note.value, str(buttonlist)
+            )
+            buttonlist.clear()
+        elif note.msgtype == 2:
+            isicat += "###sticker###:{}<###splitter###>".format(note.file)
+        elif note.msgtype == 3:
+            isicat += "###file###:{}<###TYPESPLIT###>{}<###splitter###>".format(
+                note.file, note.value
+            )
+        elif note.msgtype == 4:
+            isicat += "###photo###:{}<###TYPESPLIT###>{}<###splitter###>".format(
+                note.file, note.value
+            )
+        elif note.msgtype == 5:
+            isicat += "###audio###:{}<###TYPESPLIT###>{}<###splitter###>".format(
+                note.file, note.value
+            )
+        elif note.msgtype == 6:
+            isicat += "###voice###:{}<###TYPESPLIT###>{}<###splitter###>".format(
+                note.file, note.value
+            )
+        elif note.msgtype == 7:
+            isicat += "###video###:{}<###TYPESPLIT###>{}<###splitter###>".format(
+                note.file, note.value
+            )
+        elif note.msgtype == 8:
+            isicat += "###video_note###:{}<###TYPESPLIT###>{}<###splitter###>".format(
+                note.file, note.value
+            )
+        else:
+            isicat += "{}<###splitter###>".format(note.value)
+    for x in range(count):
+        notes["#{}".format(namacat.split("<###splitter###>")[x])] = "{}".format(
+            isicat.split("<###splitter###>")[x]
+        )
+    # Rules
+    rules = rulessql.get_rules(chat_id)
+    # Blacklist
+    bl = list(blacklistsql.get_chat_blacklist(chat_id))
+    # Disabled command
+    disabledcmd = list(disabledsql.get_all_disabled(chat_id))
+    # Filters (TODO)
+    """
 	all_filters = list(filtersql.get_chat_triggers(chat_id))
 	export_filters = {}
 	for filters in all_filters:
@@ -213,63 +266,90 @@ def export_data(bot: Bot, update: Update, chat_data):
 		export_filters[filters] = content
 	print(export_filters)
 	"""
-	# Welcome (TODO)
-	# welc = welcsql.get_welc_pref(chat_id)
-	# Locked
-	locks = locksql.get_locks(chat_id)
-	locked = []
-	if locks:
-		if locks.sticker:
-			locked.append('sticker')
-		if locks.document:
-			locked.append('document')
-		if locks.contact:
-			locked.append('contact')
-		if locks.audio:
-			locked.append('audio')
-		if locks.game:
-			locked.append('game')
-		if locks.bots:
-			locked.append('bots')
-		if locks.gif:
-			locked.append('gif')
-		if locks.photo:
-			locked.append('photo')
-		if locks.video:
-			locked.append('video')
-		if locks.voice:
-			locked.append('voice')
-		if locks.location:
-			locked.append('location')
-		if locks.forward:
-			locked.append('forward')
-		if locks.url:
-			locked.append('url')
-		restr = locksql.get_restr(chat_id)
-		if restr.other:
-			locked.append('other')
-		if restr.messages:
-			locked.append('messages')
-		if restr.preview:
-			locked.append('preview')
-		if restr.media:
-			locked.append('media')
-	# Warns (TODO)
-	# warns = warnssql.get_warns(chat_id)
-	# Backing up
-	backup[chat_id] = {'bot': bot.id, 'hashes': {'info': {'rules': rules}, 'extra': notes, 'blacklist': bl, 'disabled': disabledcmd, 'locks': locked}}
-	baccinfo = json.dumps(backup, indent=4)
-	f=open("CTRL{}.backup".format(chat_id), "w")
-	f.write(str(baccinfo))
-	f.close()
-	bot.sendChatAction(current_chat_id, "upload_document")
-	tgl = time.strftime("%H:%M:%S - %d/%m/%Y", time.localtime(time.time()))
-	try:
-		bot.sendMessage(MESSAGE_DUMP, "*Successfully imported backup:*\nChat: `{}`\nChat ID: `{}`\nOn: `{}`".format(chat.title, chat_id, tgl), parse_mode=ParseMode.MARKDOWN)
-	except BadRequest:
-		pass
-	bot.sendDocument(current_chat_id, document=open('CTRL{}.backup'.format(chat_id), 'rb'), caption="*Successfully imported backup:*\nChat: `{}`\nChat ID: `{}`\nOn: `{}`\n\nNote: This `CTRL's Backup` is specially made for notes.".format(chat.title, chat_id, tgl), timeout=360, reply_to_message_id=msg.message_id, parse_mode=ParseMode.MARKDOWN)
-	os.remove("CTRL{}.backup".format(chat_id)) # Cleaning file
+    # Welcome (TODO)
+    # welc = welcsql.get_welc_pref(chat_id)
+    # Locked
+    curr_locks = locksql.get_locks(chat_id)
+    curr_restr = locksql.get_restr(chat_id)
+
+    if curr_locks:
+        locked_lock = {
+            "sticker": curr_locks.sticker,
+            "audio": curr_locks.audio,
+            "voice": curr_locks.voice,
+            "document": curr_locks.document,
+            "video": curr_locks.video,
+            "contact": curr_locks.contact,
+            "photo": curr_locks.photo,
+            "gif": curr_locks.gif,
+            "url": curr_locks.url,
+            "bots": curr_locks.bots,
+            "forward": curr_locks.forward,
+            "game": curr_locks.game,
+            "location": curr_locks.location,
+        }
+    else:
+        locked_lock = {}
+
+    if curr_restr:
+        locked_restr = {
+            "messages": curr_restr.messages,
+            "media": curr_restr.media,
+            "other": curr_restr.other,
+            "previews": curr_restr.preview,
+            "all": all(
+                [
+                    curr_restr.messages,
+                    curr_restr.media,
+                    curr_restr.other,
+                    curr_restr.preview,
+                ]
+            ),
+        }
+    else:
+        locked_restr = {}
+
+    locks = {"locks": locked_lock, "restrict": locked_restr}
+    # Warns (TODO)
+    # warns = warnssql.get_warns(chat_id)
+    # Backing up
+    backup[chat_id] = {
+        "bot": bot.id,
+        "hashes": {
+            "info": {"rules": rules},
+            "extra": notes,
+            "blacklist": bl,
+            "disabled": disabledcmd,
+            "locks": locks,
+        },
+    }
+    baccinfo = json.dumps(backup, indent=4)
+    f = open("CTRL{}.backup".format(chat_id), "w")
+    f.write(str(baccinfo))
+    f.close()
+    bot.sendChatAction(current_chat_id, "upload_document")
+    tgl = time.strftime("%H:%M:%S - %d/%m/%Y", time.localtime(time.time()))
+    try:
+        bot.sendMessage(
+            MESSAGE_DUMP,
+            "*Successfully imported backup:*\nChat: `{}`\nChat ID: `{}`\nOn: `{}`".format(
+                chat.title, chat_id, tgl
+            ),
+            parse_mode=ParseMode.MARKDOWN,
+        )
+    except BadRequest:
+        pass
+    bot.sendDocument(
+        current_chat_id,
+        document=open("CTRL{}.backup".format(chat_id), "rb"),
+        caption="*Successfully imported backup:*\nChat: `{}`\nChat ID: `{}`\nOn: `{}`\n\nNote: This `CTRL-Backup` is specially made for notes.".format(
+            chat.title, chat_id, tgl
+        ),
+        timeout=360,
+        reply_to_message_id=msg.message_id,
+        parse_mode=ParseMode.MARKDOWN,
+    )
+    os.remove("CTRL{}.backup".format(chat_id))  # Cleaning file
 
 
 # Temporary data
