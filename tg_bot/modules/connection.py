@@ -298,9 +298,10 @@ Actions are available with connected groups:
  • View and edit notes
  • View and edit filters
  • Enable and Disable commands in chat.
+ • Set and control Blacklist settings.
  • More in future!
 
- - /connect <chatid>: Connect to remote chat
+ - /connect: Connects to chat (Can be done in a group by /connect or /connect <chat id> in PM)
  - /disconnect: Disconnect from chat
  - /allowconnect on/yes/off/no: Allow connect users to group
 """
