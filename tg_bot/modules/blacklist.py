@@ -12,6 +12,7 @@ from tg_bot.modules.disable import DisableAbleCommandHandler
 from tg_bot.modules.helper_funcs.chat_status import user_admin, user_not_admin
 from tg_bot.modules.helper_funcs.extraction import extract_text
 from tg_bot.modules.helper_funcs.misc import split_message
+from tg_bot.modules.connection import connected
 from tg_bot.modules.helper_funcs.alternate import send_message
 
 BLACKLIST_GROUP = 11
