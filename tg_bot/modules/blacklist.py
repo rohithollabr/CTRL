@@ -357,6 +357,13 @@ def del_blacklist(bot: Bot, update: Update):
             break
 
 
+def __import_data__(chat_id, data):
+    # set chat blacklist
+    blacklist = data.get("blacklist", {})
+    for trigger in blacklist:
+        sql.add_to_blacklist(chat_id, trigger)
+
+
 def __migrate__(old_chat_id, new_chat_id):
     sql.migrate_chat(old_chat_id, new_chat_id)
 
@@ -371,7 +378,7 @@ def __stats__():
                                                             sql.num_blacklist_filter_chats())
 
 
-__mod_name__ = "Word Blacklists"
+__mod_name__ = "Blacklists"
 
 __help__ = """
 Blacklists are used to stop certain triggers from being said in a group. Any time the trigger is mentioned, \
