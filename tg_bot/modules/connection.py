@@ -301,6 +301,7 @@ Actions are available with connected groups:
  • Enable and Disable commands in chat.
  • Set and control AntiFlood settings.
  • Set and control Blacklist settings.
+• Export and Imports of chat backup.
  • More in future!
 
  - /connect: Connects to chat (Can be done in a group by /connect or /connect <chat id> in PM)
