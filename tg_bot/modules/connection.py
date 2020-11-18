@@ -173,8 +173,7 @@ Actions are available with connected groups:
  • View and edit filters
  • More in future!
 
- - /connect <chatid>: Connect to remote chat
- - /connection: List connected chats
+-  /connect: Connects to chat (Can be done in a group by /connect or /connect <chat id> in PM)
  - /disconnect: Disconnect from chat
  - /allowconnect on/yes/off/no: Allow connect users to group
 """
