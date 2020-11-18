@@ -298,6 +298,7 @@ Actions are available with connected groups:
  • View and edit notes
  • View and edit filters
  • Enable and Disable commands in chat.
+ • Set and control AntiFlood settings.
  • Set and control Blacklist settings.
  • More in future!
 
