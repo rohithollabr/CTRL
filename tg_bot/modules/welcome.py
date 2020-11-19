@@ -18,7 +18,7 @@ from tg_bot.modules.helper_funcs.string_handling import markdown_parser, \
     escape_invalid_curly_brackets
 from tg_bot.modules.log_channel import loggable
 
-VALID_WELCOME_FORMATTERS = ['first', 'last', 'fullname', 'username', 'id', 'count', 'chatname', 'mention', 'rules']
+VALID_WELCOME_FORMATTERS = ['first', 'last', 'fullname', 'username', 'id', 'count', 'chatname', 'mention']
 
 ENUM_FUNC_MAP = {
     sql.Types.TEXT.value: dispatcher.bot.send_message,
@@ -129,7 +129,7 @@ def new_member(bot: Bot, update: Update):
                     res = valid_format.format(first=escape_html(first_name),
                                               last=escape_html(new_mem.last_name or first_name),
                                               fullname=escape_html(fullname), username=username, mention=mention,
-                                              count=count, chatname=escape_html(chat.title), id=new_mem.id), rules=http://t.me/{}?start={}.format(bot.username, chat_id))
+                                              count=count, chatname=escape_html(chat.title), id=new_mem.id)
                     buttons = sql.get_welc_buttons(chat.id)
                     keyb = build_keyboard_parser(bot, chat.id, buttons)
                 else:
