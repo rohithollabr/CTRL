@@ -267,3 +267,12 @@ def make_time(time_val):
     elif int(time_val) >= 86400:
         bantime = str(int(time_val / 24 / 60 / 60)) + "d"
     return bantime
+
+def markdown_to_html(text):
+    text = text.replace("*", "**")
+    text = text.replace("`", "```")
+    text = text.replace("~", "~~")
+    _html = markdown2.markdown(text, extras=["strike", "underline"])
+    return bleach.clean(
+        _html, tags=["strong", "em", "a", "code", "pre", "strike", "u"], strip=True
+    )[:-1]
