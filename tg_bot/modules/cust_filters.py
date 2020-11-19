@@ -226,7 +226,7 @@ def stop_filter(bot: Bot, update: Update):
     chat_filters = sql.get_chat_triggers(chat_id)
 
     if not chat_filters:
-        send_message(update.effective_message, "No filters are active in {}!").format(chat_name))
+        send_message(update.effective_message, "No filters are active in {}!").format(chat_name)
         return
 
     for keyword in chat_filters:
