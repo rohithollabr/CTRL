@@ -15,7 +15,7 @@ from tg_bot.modules.helper_funcs.chat_status import user_admin
 from tg_bot.modules.helper_funcs.extraction import extract_text
 from tg_bot.modules.helper_funcs.filters import CustomFilters
 from tg_bot.modules.helper_funcs.msg_types import get_filter_type
-from tg_bot.modules.helper_funcs.misc import build_keyboard
+from tg_bot.modules.helper_funcs.misc import build_keyboard_parser
 from tg_bot.modules.helper_funcs.string_handling import split_quotes, button_markdown_parser
 from tg_bot.modules.sql import cust_filters_sql as sql
 
@@ -375,7 +375,7 @@ def reply_filter(bot: Bot, update: Update):
                     message.reply_video(filt.reply)
                 elif filt.has_markdown:
                     buttons = sql.get_buttons(chat.id, filt.keyword)
-                    keyb = build_keyboard_parser(context.bot, chat.id, buttons)
+                    keyb = build_keyboard_parser(bot, chat.id, buttons)
                     keyboard = InlineKeyboardMarkup(keyb)
 
                     try:
