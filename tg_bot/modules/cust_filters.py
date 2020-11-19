@@ -5,7 +5,7 @@ import telegram
 from telegram import ParseMode, InlineKeyboardMarkup, Message, Chat
 from telegram import Update, Bot
 from telegram.error import BadRequest
-from telegram.ext import CommandHandler, MessageHandler, DispatcherHandlerStop, run_async
+from telegram.ext import CommandHandler, MessageHandler, DispatcherHandlerStop, run_async, Filters
 from telegram.utils.helpers import escape_markdown
 from html import escape
 
@@ -22,7 +22,7 @@ from tg_bot.modules.helper_funcs.alternate import send_message
 
 from tg_bot.modules.connection import connected
 
-HANDLER_GROUP = 10
+HANDLER_GROUP = 15
 
 
 
