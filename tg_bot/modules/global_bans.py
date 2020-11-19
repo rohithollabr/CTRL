@@ -60,8 +60,8 @@ def gban(bot: Bot, update: Update, args: List[str]):
         message.reply_text("I cant't Gban Sudo Users :V")
         return
 
-    if int(user_id) in OWNER_ID:
-        message.reply_text("I cant't Gban OWNER:")
+    if user_id == OWNER_ID:
+        message.reply_text("Nice try -_- but I'm never gonna gban him.")
         return
 
     if int(user_id) in SUPPORT_USERS:
