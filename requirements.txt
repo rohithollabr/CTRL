@@ -34,3 +34,4 @@ googletrans
 tswift
 speedtest-cli
 bleach
+git+https://github.com/starry69/python-markdown2.git
