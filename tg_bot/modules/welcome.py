@@ -12,7 +12,7 @@ from html import escape
 import tg_bot.modules.sql.welcome_sql as sql
 from tg_bot import dispatcher, OWNER_ID, LOGGER, MESSAGE_DUMP
 from tg_bot.modules.helper_funcs.chat_status import user_admin, is_user_ban_protected
-from tg_bot.modules.helper_funcs.misc import build_keyboard, revert_buttons
+from tg_bot.modules.helper_funcs.misc import build_keyboard_parser, revert_buttons
 from tg_bot.modules.helper_funcs.msg_types import get_welcome_type
 from tg_bot.modules.helper_funcs.string_handling import markdown_parser, \
     escape_invalid_curly_brackets
@@ -131,7 +131,7 @@ def new_member(bot: Bot, update: Update):
                                               fullname=escape_html(fullname), username=username, mention=mention,
                                               count=count, chatname=escape_html(chat.title), id=new_mem.id)
                     buttons = sql.get_welc_buttons(chat.id)
-                    keyb = build_keyboard(buttons)
+                    keyb = build_keyboard_parser(bot, chat.id, buttons)
                 else:
                     res = sql.DEFAULT_WELCOME.format(first=first_name)
                     keyb = []
@@ -235,7 +235,7 @@ def left_member(bot: Bot, update: Update):
                                           fullname=escape_html(fullname), username=username, mention=mention,
                                           count=count, chatname=escape_html(chat.title), id=left_mem.id)
                 buttons = sql.get_gdbye_buttons(chat.id)
-                keyb = build_keyboard(buttons)
+                keyb = build_keyboard_parser(bot, chat.id, buttons)
 
             else:
                 res = sql.DEFAULT_GOODBYE
@@ -267,7 +267,7 @@ def welcome(bot: Bot, update: Update, args: List[str]):
                 update.effective_message.reply_text(welcome_m)
 
             else:
-                keyb = build_keyboard(buttons)
+                keyb = build_keyboard_parser(bot, chat.id, buttons)
                 keyboard = InlineKeyboardMarkup(keyb)
 
                 send(update, welcome_m, keyboard, sql.DEFAULT_WELCOME)
@@ -313,7 +313,7 @@ def goodbye(bot: Bot, update: Update, args: List[str]):
                 update.effective_message.reply_text(goodbye_m)
 
             else:
-                keyb = build_keyboard(buttons)
+                keyb = build_keyboard_parser(bot, chat.id, buttons)
                 keyboard = InlineKeyboardMarkup(keyb)
 
                 send(update, goodbye_m, keyboard, sql.DEFAULT_GOODBYE)
