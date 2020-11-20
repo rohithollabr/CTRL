@@ -471,11 +471,14 @@ def rmall_filters(bot: Bot, update: Update):
 def addnew_filter(update, chat_id, keyword, text, file_type, file_id, buttons):
     msg = update.effective_message
     totalfilt = sql.get_chat_triggers(chat_id)
-    if len(totalfilt) >= 150:  # Idk why i made this like function....
+    if len(totalfilt) >= 50:  # Idk why i made this like function....
         msg.reply_text(
-            "You can't have more that **150** filters at once! try removing some before adding new filters."
+            "You can't have more that fifty filters at once! try removing some before adding new filters."
         )
         return False
+    else:
+        sql.new_add_filter(chat_id, keyword, text, file_type, file_id, buttons)
+        return True
 
 
 def __stats__():
