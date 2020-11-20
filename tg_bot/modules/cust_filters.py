@@ -6,7 +6,7 @@ from telegram import ParseMode, InlineKeyboardMarkup, Message, Chat
 from telegram import Update, Bot
 from telegram.error import BadRequest
 from telegram.ext import CommandHandler, MessageHandler, DispatcherHandlerStop, run_async, Filters
-from telegram.utils.helpers import escape_markdown
+from telegram.utils.helpers import escape_markdown, mention_html
 from html import escape
 
 from tg_bot import dispatcher, LOGGER
