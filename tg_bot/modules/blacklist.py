@@ -2,7 +2,7 @@ import html
 import re
 from typing import Optional, List
 
-from telegram import Message, Chat, Update, Bot, ParseMode
+from telegram import Message, Chat, Update, Bot, ParseMode, ChatPermissions
 from telegram.error import BadRequest
 from telegram.utils.helpers import mention_html
 from telegram.ext import CommandHandler, MessageHandler, Filters, run_async
@@ -341,20 +341,90 @@ def findall(p, s):
 @run_async
 @user_not_admin
 def del_blacklist(bot: Bot, update: Update):
-    chat = update.effective_chat  # type: Optional[Chat]
-    message = update.effective_message  # type: Optional[Message]
+    chat = update.effective_chat
+    message = update.effective_message
+    user = update.effective_user
     to_match = extract_text(message)
     if not to_match:
         return
+
+    getmode, value = sql.get_blacklist_setting(chat.id)
 
     chat_filters = sql.get_chat_blacklist(chat.id)
     for trigger in chat_filters:
         pattern = r"( |^|[^\w])" + re.escape(trigger) + r"( |$|[^\w])"
         if re.search(pattern, to_match, flags=re.IGNORECASE):
             try:
-                message.delete()
+                if getmode == 0:
+                    return
+                elif getmode == 1:
+                    message.delete()
+                elif getmode == 2:
+                    message.delete()
+                    warn(
+                        update.effective_user,
+                        chat,
+                        ("Using blacklisted trigger: {}".format(trigger)),
+                        message,
+                        update.effective_user,
+                    )
+                    return
+                elif getmode == 3:
+                    message.delete()
+                    bot.restrict_chat_member(
+                        chat.id,
+                        update.effective_user.id,
+                        permissions=ChatPermissions(can_send_messages=False),
+                    )
+                    bot.sendMessage(
+                        chat.id,
+                        f"Muted {user.first_name} for using Blacklisted word: {trigger}!",
+                    )
+                    return
+                elif getmode == 4:
+                    message.delete()
+                    res = chat.unban_member(update.effective_user.id)
+                    if res:
+                        bot.sendMessage(
+                            chat.id,
+                            f"Kicked {user.first_name} for using Blacklisted word: {trigger}!",
+                        )
+                    return
+                elif getmode == 5:
+                    message.delete()
+                    chat.kick_member(user.id)
+                    bot.sendMessage(
+                        chat.id,
+                        f"Banned {user.first_name} for using Blacklisted word: {trigger}",
+                    )
+                    return
+                elif getmode == 6:
+                    message.delete()
+                    bantime = extract_time(message, value)
+                    chat.kick_member(user.id, until_date=bantime)
+                    bot.sendMessage(
+                        chat.id,
+                        f"Banned {user.first_name} until '{value}' for using Blacklisted word: {trigger}!",
+                    )
+                    return
+                elif getmode == 7:
+                    message.delete()
+                    mutetime = extract_time(message, value)
+                    bot.restrict_chat_member(
+                        chat.id,
+                        user.id,
+                        until_date=mutetime,
+                        permissions=ChatPermissions(can_send_messages=False),
+                    )
+                    bot.sendMessage(
+                        chat.id,
+                        f"Muted {user.first_name} until '{value}' for using Blacklisted word: {trigger}!",
+                    )
+                    return
             except BadRequest as excp:
-                if excp.message != "Message to delete not found":
+                if excp.message == "Message to delete not found":
+                    pass
+                else:
                     LOGGER.exception("Error while deleting blacklist message.")
             break
 
