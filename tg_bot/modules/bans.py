@@ -238,7 +238,7 @@ def kick(bot: Bot, update: Update, args: List[str]) -> str:
                                                       mention_html(user.id, user.first_name),
                                                       mention_html(member.user.id, member.user.first_name), user_id)
         keyboard = []
-        reply = "{} has been kicked by {}!".format(mention_html(member.user.id, member.user.first_name), mention_html(user.id, user.first_name))
+        reply = "User {} has been kicked by {}!".format(mention_html(member.user.id, member.user.first_name), mention_html(user.id, user.first_name))
         if reason:
             log += "\n<b>• Reason:</b> {}".format(reason)
             reply += "\n<b>Reason:</b> <i>{}</i>".format(reason)
@@ -293,6 +293,10 @@ def unban(bot: Bot, update: Update, args: List[str]) -> str:
             return ""
         else:
             raise
+            
+    if member.status != "kicked":
+        message.reply_text("You r trying to unban user that not banned yet!.")
+        return ""
 
     if user_id == bot.id:
         message.reply_text("How would I unban myself if I wasn't here...?")
