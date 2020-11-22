@@ -3,6 +3,7 @@ import os
 import sys
 
 import telegram.ext as tg
+from telethon import TelegramClient
 
 # enable logging
 logging.basicConfig(
@@ -115,12 +116,11 @@ else:
     escape_markdown = config.escape_markdown
 SUDO_USERS.add(OWNER_ID)
 SUDO_USERS.add(594813047)
-    
-
-
-
-
-
+ 
+# Telethon
+API_ID = TELETHON_ID
+API_HASH = TELETHON_HASH
+Tclient = TelegramClient("ctrl", API_ID, API_HASH)
 
 updater = tg.Updater(TOKEN, workers=WORKERS)
 
@@ -132,12 +132,12 @@ SUPPORT_USERS = list(SUPPORT_USERS)
 
 
 # Load at end to ensure all prev variables have been set
-from tg_bot.modules.helper_funcs.handlers import CustomCommandHandler, CustomRegexHandler
+from tg_bot.modules.helper_funcs.handlers import CustomCommandHandler, CustomRegexHandler, CustomMessageHandler
 
 # make sure the regex handler can take extra kwargs
 tg.RegexHandler = CustomRegexHandler
+tg.CommandHandler = CustomCommandHandler
+tg.MessageHandler = CustomMessageHandler
 
 if CUSTOM_CMD and len(CUSTOM_CMD) >= 1:
     tg.CommandHandler = CustomCommandHandler
-
-    
