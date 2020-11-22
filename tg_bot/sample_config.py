@@ -32,6 +32,7 @@ class Config(object):
     BAN_STICKER = 'CAADAgADOwADPPEcAXkko5EB3YGYAg'  # banhammer marie sticker
     KICK_STICKER = False # StickerId while /kick ,same as BAN_STICKER
     ALLOW_EXCL = False  # Allow ! commands as well as /
+    CUSTOM_CMD = False  # Set to ('/', '!') or whatever to enable it, like ALLOW_EXCL but with more custom handler!
     API_OPENWEATHER = False #Get API_OPENWEATHER FROM OFFICAL SITE https://da.gd/VAW3
     TEMPORARY_DATA = None # Temporary data for backup module, use int number
     MAPS_API = ""
