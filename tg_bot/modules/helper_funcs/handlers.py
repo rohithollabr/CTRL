@@ -1,4 +1,5 @@
 import telegram.ext as tg
+from telegram.ext import Filters
 from telegram import Update
 import tg_bot.modules.sql.global_bans_sql as sql
 
@@ -49,3 +50,21 @@ class CustomCommandHandler(tg.CommandHandler):
 class CustomRegexHandler(tg.RegexHandler):
     def __init__(self, pattern, callback, friendly="", **kwargs):
         super().__init__(pattern, callback, **kwargs)
+
+class CustomMessageHandler(tg.MessageHandler):
+
+    def __init__(self,
+                 filters,
+                 callback,
+                 friendly="",
+                 allow_edit=False,
+                 **kwargs):
+        super().__init__(filters, callback, **kwargs)
+        if allow_edit is False:
+            self.filters &= ~(
+                Filters.update.edited_message
+                | Filters.update.edited_channel_post)
+
+        def check_update(self, update):
+            if isinstance(update, Update) and update.effective_message:
+                return self.filters(update)
