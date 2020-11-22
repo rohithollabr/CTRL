@@ -5,12 +5,10 @@ import tg_bot.modules.sql.global_bans_sql as sql
 try:
     from tg_bot import CUSTOM_CMD
 except:
-    CUSTOM_CMD = True
+    CUSTOM_CMD = False
 
 if CUSTOM_CMD:
-    CMD_STARTERS = CUSTOM_CMD
-else:
-    CMD_STARTERS = ('/')
+    CMD_STARTERS = ('/', '!')
 
 
 class CustomCommandHandler(tg.CommandHandler):
