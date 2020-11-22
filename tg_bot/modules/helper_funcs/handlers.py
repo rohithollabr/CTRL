@@ -8,6 +8,8 @@ except:
     CUSTOM_CMD = False
 
 if CUSTOM_CMD:
+    CMD_STARTERS = CMD_STARTERS
+else:
     CMD_STARTERS = ('/', '!')
 
 
