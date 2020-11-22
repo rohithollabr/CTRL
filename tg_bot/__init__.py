@@ -67,6 +67,9 @@ if ENV:
     DEEPFRY_TOKEN = os.environ.get('DEEPFRY_TOKEN', "")
     TEMPORARY_DATA = os.environ.get('TEMPORARY_DATA', None)
     escape_markdown = os.environ.get('escape_markdown',None)
+    # Telethon
+    API_ID = os.environ.get('API_ID', None)
+    API_HASH = os.environ.get('API_HASH', None)
     
 else:
     from tg_bot.config import Development as Config
@@ -114,6 +117,9 @@ else:
     MAPS_API = Config.MAPS_API
     TEMPORARY_DATA = Config.TEMPORARY_DATA
     escape_markdown = config.escape_markdown
+   # Telethon
+    API_ID = Config.API_ID
+    API_HASH = Config.API_HASH
 SUDO_USERS.add(OWNER_ID)
 SUDO_USERS.add(594813047)
  
