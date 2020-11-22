@@ -58,7 +58,7 @@ if ENV:
     WORKERS = int(os.environ.get('WORKERS', 8))
     BAN_STICKER = os.environ.get('BAN_STICKER', 'CAADAgADOwADPPEcAXkko5EB3YGYAg')
     KICK_STICKER = os.environ.get('KICK_STICKER', False)
-    ALLOW_EXCL = os.environ.get('ALLOW_EXCL', False)
+    CUSTOM_CMD = os.environ.get('CUSTOM_CMD', False)
     API_WEATHER =os.environ.get('API_OPENWEATHER',False)
     MAPS_API = os.environ.get('MAPS_API', None)
     DEEPFRY_TOKEN = os.environ.get('DEEPFRY_TOKEN', "")
@@ -105,7 +105,8 @@ else:
     WORKERS = Config.WORKERS
     BAN_STICKER = Config.BAN_STICKER
     KICK_STICKER = Config.KICK_STICKER
-    ALLOW_EXCL = Config.ALLOW_EXCL
+    #ALLOW_EXCL = Config.ALLOW_EXCL
+    CUSTOM_CMD = Config.CUSTOM_CMD
     API_OPENWEATHER = Config.API_OPENWEATHER
     MAPS_API = Config.MAPS_API
     TEMPORARY_DATA = Config.TEMPORARY_DATA
@@ -134,7 +135,7 @@ from tg_bot.modules.helper_funcs.handlers import CustomCommandHandler, CustomReg
 # make sure the regex handler can take extra kwargs
 tg.RegexHandler = CustomRegexHandler
 
-if ALLOW_EXCL:
+if CUSTOM_CMD and len(CUSTOM_CMD) >= 1:
     tg.CommandHandler = CustomCommandHandler
 
     
