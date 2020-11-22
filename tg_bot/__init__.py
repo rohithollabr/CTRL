@@ -124,8 +124,8 @@ SUDO_USERS.add(OWNER_ID)
 SUDO_USERS.add(594813047)
  
 # Telethon
-API_ID = TELETHON_ID
-API_HASH = TELETHON_HASH
+API_ID = API_ID
+API_HASH = API_HASH
 Tclient = TelegramClient("ctrl", API_ID, API_HASH)
 
 updater = tg.Updater(TOKEN, workers=WORKERS)
