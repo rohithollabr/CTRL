@@ -37,17 +37,17 @@ async def purge(event):
         msg_id = msg.id
         count = 0
         to_delete = event.message.id - 1
-        await event.Tclient.delete_messages(chat, event.message.id)
+        await event.client.delete_messages(chat, event.message.id)
         msgs.append(event.reply_to_msg_id)
         for m_id in range(to_delete, msg_id - 1, -1):
             msgs.append(m_id)
             count += 1
             if len(msgs) == 100:
-                await event.Tclient.delete_messages(chat, msgs)
+                await event.client.delete_messages(chat, msgs)
                 msgs = []
 
-        await event.Tclient.delete_messages(chat, msgs)
-        del_res = await event.Tclient.send_message(
+        await event.client.delete_messages(chat, msgs)
+        del_res = await event.client.send_message(
             event.chat_id, f"Purged {count} messages."
         )
 
@@ -77,7 +77,7 @@ async def delete_msg(event):
     to_delete = event.message
     chat = await event.get_input_chat()
     rm = [msg, to_delete]
-    await event.Tclient.delete_messages(chat, rm)
+    await event.client.delete_messages(chat, rm)
 
 
 __help__ = """
