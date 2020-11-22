@@ -5,7 +5,7 @@ import tg_bot.modules.sql.global_bans_sql as sql
 try:
     from tg_bot import CUSTOM_CMD
 except:
-    CUSTOM_CMD = False
+    CUSTOM_CMD = True
 
 if CUSTOM_CMD:
     CMD_STARTERS = CUSTOM_CMD
