@@ -374,7 +374,7 @@ def del_blacklist(bot: Bot, update: Update):
                     bot.restrict_chat_member(
                         chat.id,
                         update.effective_user.id,
-                        can_send_messages=False),
+                        can_send_messages=False,
                     )
                     bot.sendMessage(
                         chat.id,
@@ -414,7 +414,7 @@ def del_blacklist(bot: Bot, update: Update):
                         chat.id,
                         user.id,
                         until_date=mutetime,
-                        can_send_messages=False),
+                        can_send_messages=False,
                     )
                     bot.sendMessage(
                         chat.id,
