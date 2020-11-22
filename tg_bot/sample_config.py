@@ -14,6 +14,10 @@ class Config(object):
     OWNER_ID = "594813047" # If you dont know, run @MissRose_bot and do /id in pm
     OWNER_USERNAME = "refundisillegal"
 
+    #Telethon [for purge stuff] Login to https://my.telegram.org and get these credentials
+    API_ID = None
+    API_HASH = None
+
     # RECOMMENDED
     SQLALCHEMY_DATABASE_URI = 'sqldbtype://username:pw@hostname:port/db_name'  # needed for any database modules
     MESSAGE_DUMP = None  # needed to make sure 'save from' messages persist
