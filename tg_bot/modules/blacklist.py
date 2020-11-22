@@ -2,7 +2,7 @@ import html
 import re
 from typing import Optional, List
 
-from telegram import Message, Chat, Update, Bot, ParseMode, ChatPermissions
+from telegram import Message, Chat, Update, Bot, ParseMode
 from telegram.error import BadRequest
 from telegram.utils.helpers import mention_html
 from telegram.ext import CommandHandler, MessageHandler, Filters, run_async
@@ -374,7 +374,7 @@ def del_blacklist(bot: Bot, update: Update):
                     bot.restrict_chat_member(
                         chat.id,
                         update.effective_user.id,
-                        permissions=ChatPermissions(can_send_messages=False),
+                        can_send_messages=False),
                     )
                     bot.sendMessage(
                         chat.id,
@@ -414,7 +414,7 @@ def del_blacklist(bot: Bot, update: Update):
                         chat.id,
                         user.id,
                         until_date=mutetime,
-                        permissions=ChatPermissions(can_send_messages=False),
+                        can_send_messages=False),
                     )
                     bot.sendMessage(
                         chat.id,
