@@ -30,7 +30,17 @@ from tg_bot.modules.connection import connected
 
 HANDLER_GROUP = 15
 
-
+ENUM_FUNC_MAP = {
+    sql.Types.TEXT.value: dispatcher.bot.send_message,
+    sql.Types.BUTTON_TEXT.value: dispatcher.bot.send_message,
+    sql.Types.STICKER.value: dispatcher.bot.send_sticker,
+    sql.Types.DOCUMENT.value: dispatcher.bot.send_document,
+    sql.Types.PHOTO.value: dispatcher.bot.send_photo,
+    sql.Types.AUDIO.value: dispatcher.bot.send_audio,
+    sql.Types.VOICE.value: dispatcher.bot.send_voice,
+    sql.Types.VIDEO.value: dispatcher.bot.send_video,
+    sql.Types.VIDEO_NOTE.value: dispatcher.bot.send_video_note
+}
 
 def escape_html(word):
     return escape(word)
