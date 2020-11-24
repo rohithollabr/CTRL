@@ -27,7 +27,7 @@ def wiki(bot: Bot, update: Update):
                                 text=wikipedia.summary(wk, sentences=10),
                                 reply_markup=keyboard)
         except PageError as e:
-        update.message.reply_text(
+            update.message.reply_text(
             "<code>{}</code>".format(e), parse_mode=ParseMode.HTML)
         except BadRequest as et:
             update.effective_message.reply_text
