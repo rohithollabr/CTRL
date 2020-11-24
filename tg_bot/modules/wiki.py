@@ -1,3 +1,4 @@
+import re
 import wikipedia
 from tg_bot import dispatcher
 from tg_bot.modules.disable import DisableAbleCommandHandler
