@@ -26,10 +26,13 @@ def wiki(bot: Bot, update: Update):
                                 message_id=msg.message_id,
                                 text=wikipedia.summary(wk, sentences=10),
                                 reply_markup=keyboard)
-        except wikipedia.PageError as e:
-            update.effective_message.reply_text("⚠ Error: {}".format(e)), parse_mode=ParseMode.HTML)
+        except PageError as e:
+        update.effective_message.reply_text(
+            "<code>{}</code>".format(e), parse_mode=ParseMode.HTML)
+
         except BadRequest as et:
-            update.effective_message.reply_text("⚠ Error: {}".format(et)), parse_mode=ParseMode.HTML)
+            update.effective_message.reply_text
+            ("⚠ Error: {}".format(et), parse_mode=ParseMode.HTML)
 
         except wikipedia.exceptions.DisambiguationError as eet:
             update.effective_message.reply_text(
