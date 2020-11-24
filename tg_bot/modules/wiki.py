@@ -32,10 +32,11 @@ def wiki(bot: Bot, update: Update):
         except BadRequest as et:
             update.message.reply_text(
             "<code>{}</code>".format(et), parse_mode=ParseMode.HTML)
-        except wikipedia.exceptions.DisambiguationError as eet:
-            update.effective_message.reply_text(
-                "⚠ Error\n There are too many query! Express it more!\nPossible query result:\n{}"
-                .format(eet)), parse_mode=ParseMode.HTML)
+        except DisambiguationError as ett:
+            update.message.reply_text(
+                "Disambiguated pages found! Adjust your query accordingly.\n<i>{}</i>"
+                .format(ett),
+                parse_mode=ParseMode.HTML)
 
 __help__ = """
  - /wiki text: Returns search from wikipedia for the input text
