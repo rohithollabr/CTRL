@@ -4,6 +4,7 @@ from tg_bot import dispatcher
 from tg_bot.modules.disable import DisableAbleCommandHandler
 from telegram import Chat, ParseMode, Update, Bot, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import run_async
+from telegram.error import BadRequest
 from wikipedia.exceptions import DisambiguationError, PageError
 
 
