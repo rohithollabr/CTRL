@@ -1,30 +1,41 @@
-from telegram import ChatAction
-import html
-import urllib.request
-import re
-import json
-from typing import Optional, List
-import time
-import urllib
-from urllib.request import urlopen, urlretrieve
-from urllib.parse import quote_plus, urlencode
-import requests
-from telegram import Message, Chat, Update, Bot, MessageEntity
-from telegram import ParseMode
-from telegram.ext import CommandHandler, run_async, Filters
-from tg_bot import dispatcher
-from tg_bot.__main__ import STATS, USER_INFO
-from tg_bot.modules.disable import DisableAbleCommandHandler
 import wikipedia
+from tg_bot import dispatcher
+from tg_bot.modules.disable import DisableAbleCommandHandler
+from telegram import Chat, ParseMode, Update, Bot, BotInlineKeyboardMarkup, InlineKeyboardButton
+from telegram.ext import run_async
+from wikipedia.exceptions import DisambiguationError, PageError
 
-def wiki(bot: Bot, update: Update, args):
-    reply = " ".join(args)
-    summary = '{} <a href="{}">more</a>'
-    update.message.reply_text(summary.format(wikipedia.summary(reply, sentences=3), wikipedia.page(reply).url))
-		
+
+@run_async
+def wiki(bot: Bot, update: Update):
+    wk = re.split(pattern="wiki", string=update.effective_message.text)
+    wikipedia.set_lang("en")
+    if len(str(wk[1])) == 0:
+        update.effective_message.reply_text("Enter keywords!")
+    else:
+        try:
+            msg = update.effective_message.reply_text("🔄 Loading...")
+            keyboard = InlineKeyboardMarkup([[
+                InlineKeyboardButton(text="🔧 More Info...",
+                                     url=wikipedia.page(wk).url)
+            ]])
+            bot.editMessageText(chat_id=update.effective_chat.id,
+                                message_id=msg.message_id,
+                                text=wikipedia.summary(wk, sentences=10),
+                                reply_markup=keyboard)
+        except wikipedia.PageError as e:
+            update.effective_message.reply_text("⚠ Error: {}".format(e))
+        except BadRequest as et:
+            update.effective_message.reply_text("⚠ Error: {}".format(et))
+        except wikipedia.exceptions.DisambiguationError as eet:
+            update.effective_message.reply_text(
+                "⚠ Error\n There are too many query! Express it more!\nPossible query result:\n{}"
+                .format(eet))
+
 __help__ = """
  - /wiki text: Returns search from wikipedia for the input text
 """
 __mod_name__ = "WikiPedia"
-WIKI_HANDLER = DisableAbleCommandHandler("wiki", wiki, pass_args=True)
+
+WIKI_HANDLER = DisableAbleCommandHandler("wiki", wiki)
 dispatcher.add_handler(WIKI_HANDLER)
