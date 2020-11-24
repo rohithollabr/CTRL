@@ -1,3 +1,4 @@
+import html
 import re
 import wikipedia
 from tg_bot import dispatcher
@@ -26,13 +27,14 @@ def wiki(bot: Bot, update: Update):
                                 text=wikipedia.summary(wk, sentences=10),
                                 reply_markup=keyboard)
         except wikipedia.PageError as e:
-            update.effective_message.reply_text("⚠ Error: {}".format(e))
+            update.effective_message.reply_text("⚠ Error: {}".format(e)), parse_mode=ParseMode.HTML)
         except BadRequest as et:
-            update.effective_message.reply_text("⚠ Error: {}".format(et))
+            update.effective_message.reply_text("⚠ Error: {}".format(et)), parse_mode=ParseMode.HTML)
+
         except wikipedia.exceptions.DisambiguationError as eet:
             update.effective_message.reply_text(
                 "⚠ Error\n There are too many query! Express it more!\nPossible query result:\n{}"
-                .format(eet))
+                .format(eet)), parse_mode=ParseMode.HTML)
 
 __help__ = """
  - /wiki text: Returns search from wikipedia for the input text
