@@ -30,8 +30,8 @@ def wiki(bot: Bot, update: Update):
             update.message.reply_text(
             "<code>{}</code>".format(e), parse_mode=ParseMode.HTML)
         except BadRequest as et:
-            update.effective_message.reply_text
-            ("⚠ Error: {}".format(et), parse_mode=ParseMode.HTML))
+        update.message.reply_text(
+            "<code>{}</code>".format(et), parse_mode=ParseMode.HTML)
         except wikipedia.exceptions.DisambiguationError as eet:
             update.effective_message.reply_text(
                 "⚠ Error\n There are too many query! Express it more!\nPossible query result:\n{}"
