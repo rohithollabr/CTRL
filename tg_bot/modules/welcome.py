@@ -175,7 +175,6 @@ def new_member(bot: Bot, update: Update):
 
 @run_async
 def check_bot_button(bot: Bot, update: Update):
-    chat = update.effective_chat  # type: Optional[Chat]
     user = update.effective_user  # type: Optional[User]
     query = update.callback_query  # type: Optional[CallbackQuery]
     #bot.restrict_chat_member(chat.id, new_mem.id, can_send_messages=True, can_send_media_messages=True, can_send_other_messages=True, can_add_web_page_previews=True)))
@@ -187,6 +186,7 @@ def check_bot_button(bot: Bot, update: Update):
     if user_id == user.id:
         print("YES")
         query.answer(text="Unmuted!")
+        chat = update.effective_chat  # type: Optional[Chat]
         #Unmute user
         bot.restrict_chat_member(chat.id, user.id, can_send_messages=True, can_send_media_messages=True, can_send_other_messages=True, can_add_web_page_previews=True)
         bot.deleteMessage(chat.id, message.message_id)
@@ -212,7 +212,7 @@ def left_member(bot: Bot, update: Update):
                 return
 
             # if media goodbye, use appropriate function for it
-            if goodbye_type != sql.Types.TEXT and goodbye_type != sql.Types.BUTTON_TEXT:
+            if goodbye_type not in [sql.Types.TEXT, sql.Types.BUTTON_TEXT]:
                 ENUM_FUNC_MAP[goodbye_type](chat.id, cust_goodbye)
                 return
 
@@ -252,7 +252,7 @@ def left_member(bot: Bot, update: Update):
 def welcome(bot: Bot, update: Update, args: List[str]):
     chat = update.effective_chat  # type: Optional[Chat]
     # if no args, show current replies.
-    if len(args) == 0 or args[0].lower() == "noformat":
+    if not args or args[0].lower() == "noformat":
         noformat = args and args[0].lower() == "noformat"
         pref, welcome_m, welcome_type = sql.get_welc_pref(chat.id)
         update.effective_message.reply_text(
@@ -298,7 +298,7 @@ def welcome(bot: Bot, update: Update, args: List[str]):
 def goodbye(bot: Bot, update: Update, args: List[str]):
     chat = update.effective_chat  # type: Optional[Chat]
 
-    if len(args) == 0 or args[0] == "noformat":
+    if not args or args[0] == "noformat":
         noformat = args and args[0] == "noformat"
         pref, goodbye_m, goodbye_type = sql.get_gdbye_pref(chat.id)
         update.effective_message.reply_text(
@@ -459,7 +459,7 @@ def security(bot: Bot, update: Update, args: List[str]) -> str:
     if len(args) >= 1:
         var = args[0]
         print(var)
-        if (var == "no" or var == "off"):
+        if var in ["no", "off"]:
             sql.set_welcome_security(chat.id, False)
             update.effective_message.reply_text("Disabled welcome security")
         elif(var == "soft"):
@@ -512,10 +512,10 @@ def cleanservice(bot: Bot, update: Update, args: List[str]) -> str:
         if len(args) >= 1:
             var = args[0]
             print(var)
-            if (var == "no" or var == "off"):
+            if var in ["no", "off"]:
                 sql.set_clean_service(chat.id, False)
                 update.effective_message.reply_text("I'll leave service messages")
-            elif(var == "yes" or var == "on"):
+            elif var in ["yes", "on"]:
                 sql.set_clean_service(chat.id, True)
                 update.effective_message.reply_text("I will clean service messages")
             else:
