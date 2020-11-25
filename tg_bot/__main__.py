@@ -12,8 +12,8 @@ from telegram.utils.helpers import mention_markdown, mention_html, escape_markdo
 from html import escape
 
 
-from tg_bot import dispatcher, updater, TOKEN, WEBHOOK, OWNER_ID, DONATION_LINK, CERT_PATH, PORT, URL, LOGGER, \
-    ALLOW_EXCL
+from tg_bot import dispatcher, Tclient, updater, TOKEN, WEBHOOK, OWNER_ID, DONATION_LINK, CERT_PATH, PORT, URL, LOGGER, \
+    CUSTOM_CMD
 # needed to dynamically load modules
 # NOTE: Module order is not guaranteed, specify that in the config file!
 from tg_bot.modules import ALL_MODULES
@@ -52,7 +52,7 @@ Hello! my name *{}*.
 
 {}
 And the following:
-""".format(dispatcher.bot.first_name, "" if not ALLOW_EXCL else "\nAll of the following commands  / or ! can  be used...\n")
+""".format(dispatcher.bot.first_name, "" if not CUSTOM_CMD else "\nAll of the following commands  / or ! can  be used...\n")
 
 DONATE_STRING = """Hey  you can Donate  to Marie Creator [Paul](t.me/sonoflars), as well as [AVATAR](t.me/Refundisillegal) for better server #ktnxbye."""
 
@@ -487,14 +487,17 @@ def main():
                                     certificate=open(CERT_PATH, 'rb'))
         else:
             updater.bot.set_webhook(url=URL + TOKEN)
+            Tclient.run_until_disconnected()
 
     else:
         LOGGER.info("Using long polling.")
         updater.start_polling(timeout=15, read_latency=4)
+        Tclient.run_until_disconnected()
 
     updater.idle()
 
 
 if __name__ == '__main__':
     LOGGER.info("Successfully loaded modules: " + str(ALL_MODULES))
+    Tclient.start(bot_token=TOKEN)
     main()

@@ -2,7 +2,15 @@ import telegram.ext as tg
 from telegram import Update
 import tg_bot.modules.sql.global_bans_sql as sql
 
-CMD_STARTERS = ('/', '!')
+try:
+    from tg_bot import CUSTOM_CMD
+except:
+    CUSTOM_CMD = False
+
+if CUSTOM_CMD:
+    CMD_STARTERS = CUSTOM_CMD
+else:
+    CMD_STARTERS = ('/', '!')
 
 
 class CustomCommandHandler(tg.CommandHandler):
@@ -19,7 +27,7 @@ class CustomCommandHandler(tg.CommandHandler):
                 return False
 
             if message.text and len(message.text) > 1:
-                fst_word = message.text_html.split(None, 1)[0]
+                fst_word = message.text.split(None, 1)[0]
                 if len(fst_word) > 1 and any(fst_word.startswith(start) for start in CMD_STARTERS):
                     command = fst_word[1:].split('@')
                     command.append(message.bot.username)  # in case the command was sent without a username

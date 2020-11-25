@@ -39,16 +39,16 @@ def promote(bot: Bot, update: Update, args: List[str]) -> str:
 
     user_id = extract_user(message, args)
     if not user_id:
-        message.reply_text(tld(chat.id, "You don't seem to be referring to a user."))
+        message.reply_text(chat.id, "You don't seem to be referring to a user.")
         return ""
 
     user_member = chatD.get_member(user_id)
     if user_member.status in ['administrator', 'creator']:
-        message.reply_text(tld(chat.id, "How am I meant to promote someone that's already an admin?"))
+        message.reply_text(chat.id, "How am I meant to promote someone that's already an admin?")
         return ""
 
     if user_id == bot.id:
-        message.reply_text(tld(chat.id, "I can't promote myself! Get an admin to do it for me."))
+        message.reply_text(chat.id, "I can't promote myself! Get an admin to do it for me.")
         return ""
 
     # set same perms as bot - bot can't assign higher perms than itself!
@@ -64,7 +64,7 @@ def promote(bot: Bot, update: Update, args: List[str]) -> str:
                           can_pin_messages=bot_member.can_pin_messages,
                           can_promote_members=bot_member.can_promote_members)
 
-    message.reply_text(tld(chat.id, f"Successfully promoted {mention_html(user_member.user.id, user_member.user.first_name)} in {html.escape(chatD.title)}!"), parse_mode=ParseMode.HTML)
+    message.reply_text(chat.id, f"Successfully promoted {mention_html(user_member.user.id, user_member.user.first_name)} in {html.escape(chatD.title)}!", parse_mode=ParseMode.HTML)
     return f"<b>{html.escape(chatD.title)}:</b>" \
             "\n#PROMOTED" \
            f"\n<b>Admin:</b> {mention_html(user.id, user.first_name)}" \
@@ -94,20 +94,20 @@ def demote(bot: Bot, update: Update, args: List[str]) -> str:
 
     user_id = extract_user(message, args)
     if not user_id:
-        message.reply_text(tld(chat.id, "You don't seem to be referring to a user."))
+        message.reply_text(chat.id, "You don't seem to be referring to a user.")
         return ""
 
     user_member = chatD.get_member(user_id)
     if user_member.status == 'creator':
-        message.reply_text(tld(chat.id, "This person CREATED the chat, how would I demote them?"))
+        message.reply_text(chat.id, "This person CREATED the chat, how would I demote them?")
         return ""
 
     if user_member.status != 'administrator':
-        message.reply_text(tld(chat.id, "Can't demote what wasn't promoted!"))
+        message.reply_text(chat.id, "Can't demote what wasn't promoted!")
         return ""
 
     if user_id == bot.id:
-        message.reply_text(tld(chat.id, "I can't demote myself!"))
+        message.reply_text(chat.id, "I can't demote myself!")
         return ""
 
     try:
@@ -120,7 +120,7 @@ def demote(bot: Bot, update: Update, args: List[str]) -> str:
                               can_restrict_members=False,
                               can_pin_messages=False,
                               can_promote_members=False)
-        message.reply_text(tld(chat.id, f"Successfully demoted in *{chatD.title}*!"), parse_mode=ParseMode.MARKDOWN)
+        message.reply_text(chat.id, f"Successfully demoted in *{chatD.title}*!", parse_mode=ParseMode.MARKDOWN)
         return f"<b>{html.escape(chatD.title)}:</b>" \
                 "\n#DEMOTED" \
                f"\n<b>Admin:</b> {mention_html(user.id, user.first_name)}" \
@@ -128,8 +128,9 @@ def demote(bot: Bot, update: Update, args: List[str]) -> str:
 
     except BadRequest:
         message.reply_text(
-            tld(chat.id, "Could not demote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!")
-            )
+            "Failed to demote. I might not be admin, or the admin status was appointed by another "
+            "user, so I can't act upon them!"
+        )
         return ""
 
         

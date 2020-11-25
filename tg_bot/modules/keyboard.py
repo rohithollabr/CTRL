@@ -19,7 +19,7 @@ def keyboard(bot, update):
         btn3 = ""
     else:
         if con_sql.get_history(user.id):
-            history = con_sql.get_history(user.id)
+            history = con_sql.get_history_conn(user.id)
         try:
             chat_name1 = dispatcher.bot.getChat(history.chat_id1).title
         except:
