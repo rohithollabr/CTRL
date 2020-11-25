@@ -280,8 +280,6 @@ def __import_data__(chat_id, data):
             sql.update_lock(chat_id, itemlock, locked=True)
         elif itemlock in RESTRICTION_TYPES:
             sql.update_restriction(chat_id, itemlock, locked=True)
-        else:
-            pass
 
 
 def __migrate__(old_chat_id, new_chat_id):
