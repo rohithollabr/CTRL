@@ -1,6 +1,8 @@
 import html
+import json
 from typing import Optional, List
 
+import requests
 from telegram import Message, Chat, Update, Bot, User
 from telegram import ParseMode
 from telegram.error import BadRequest
@@ -8,7 +10,7 @@ from telegram.ext import CommandHandler, Filters
 from telegram.ext.dispatcher import run_async
 from telegram.utils.helpers import escape_markdown, mention_html
 
-from tg_bot import dispatcher
+from tg_bot import dispatcher, SUDO_USERS, TOKEN
 from tg_bot.modules.disable import DisableAbleCommandHandler
 from tg_bot.modules.helper_funcs.chat_status import (
     bot_admin,
@@ -82,6 +84,41 @@ def promote(bot: Bot, update: Update, args: List[str]) -> str:
             mention_html(user_member.user.id, user_member.user.first_name),
         )
     )
+
+@run_async
+@bot_admin
+@can_promote
+@user_admin
+def title(bot: Bot, update: Update, args):
+    chat = update.effective_chat
+    user = update.effective_user
+    message = update.effective_message
+    
+    if user_can_promote(chat, user, bot.id) is False:
+        message.reply_text("You don't have enough rights to do that!")
+        return ""
+    
+    user_id, title = extract_user_and_text(message, args)
+    if not user_id:
+        message.reply_text("You don't seem to be referring to a user.")
+        return
+    if not title:
+        message.reply_text("There's no title...")
+        return
+
+    response = requests.post(
+        f"https://api.telegram.org/bot{TOKEN}/setChatAdministratorCustomTitle"
+        f"?chat_id={chat.id}"
+        f"&user_id={user_id}"
+        f"&custom_title={title}"
+    )
+    
+    if response.status_code != 200:
+        resp_text = json.loads(response.text)
+        text = f"An error occurred:\n`{resp_text.get('description')}`"
+    else:
+        text = f"Successfully set title to `{title}`!"
+    message.reply_text(text, parse_mode="MARKDOWN")
 
 @run_async
 @bot_admin
@@ -302,6 +339,7 @@ __help__ = """
  - /unpin: unpins the currently pinned message
  - /invitelink: gets invitelink
  - /promote: promotes the user replied to
+ - /title <title>: as a reply to a user, sets admin title.
  - /demote: demotes the user replied to
 """
 
@@ -313,6 +351,7 @@ UNPIN_HANDLER = CommandHandler("unpin", unpin, filters=Filters.group)
 INVITE_HANDLER = CommandHandler("invitelink", invite) #, filters=Filters.group)
 
 PROMOTE_HANDLER = CommandHandler("promote", promote, pass_args=True, filters=Filters.group)
+TITLE_HANDLER = CommandHandler("title", title, pass_args=True, filters=Filters.group)
 DEMOTE_HANDLER = CommandHandler("demote", demote, pass_args=True, filters=Filters.group)
 
 ADMINLIST_HANDLER = DisableAbleCommandHandler("adminlist", adminlist, filters=Filters.group)
@@ -321,5 +360,6 @@ dispatcher.add_handler(PIN_HANDLER)
 dispatcher.add_handler(UNPIN_HANDLER)
 dispatcher.add_handler(INVITE_HANDLER)
 dispatcher.add_handler(PROMOTE_HANDLER)
+dispatcher.add_handler(TITLE_HANDLER)
 dispatcher.add_handler(DEMOTE_HANDLER)
 dispatcher.add_handler(ADMINLIST_HANDLER)
