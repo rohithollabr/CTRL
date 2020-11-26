@@ -66,7 +66,7 @@ UNFBAN_ERRORS = {
 def new_fed(bot: Bot, update: Update):
 	chat = update.effective_chat  # type: Optional[Chat]
 	user = update.effective_user  # type: Optional[User]
-      fname = update.effective_user.first_name
+        fname = update.effective_user.first_name
 	message = update.effective_message
 	if chat.type != "private":
 		update.effective_message.reply_text("Please run this command in my PM only!")
