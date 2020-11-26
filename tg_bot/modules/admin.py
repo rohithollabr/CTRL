@@ -71,7 +71,7 @@ def promote(bot: Bot, update: Update, args: List[str]) -> str:
                           can_pin_messages=bot_member.can_pin_messages,
                           can_promote_members=bot_member.can_promote_members)
 
-    message.reply_text("Successfully promoted {} in *{}*".format(mention_html(member.user.id, member.user.first_name), (chat.title)
+    message.reply_text("Successfully promoted {} in *{}*".format(mention_html(member.user.id, member.user.first_name), (chat.title))
     return (
         "<b>{}:</b>"
         "\n#PROMOTED"
@@ -131,7 +131,7 @@ def demote(bot: Bot, update: Update, args: List[str]) -> str:
                               can_restrict_members=False,
                               can_pin_messages=False,
                               can_promote_members=False)
-        message.reply_text("Successfully demoted {} in *{}*".format(mention_html(member.user.id, member.user.first_name), (chat.title)
+        message.reply_text("Successfully demoted {} in *{}*".format(mention_html(member.user.id, member.user.first_name), (chat.title))
         return f"<b>{html.escape(chat.title)}:</b>" \
                 "\n#DEMOTED" \
                f"\n<b>Admin:</b> {mention_html(user.id, user.first_name)}" \
