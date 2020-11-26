@@ -445,7 +445,7 @@ def rmall_filters(bot: Bot, update: Update):
     chat = update.effective_chat
     user = update.effective_user
     member = chat.get_member(user.id)
-    if member.status != "creator" and user.id not in DRAGONS:
+    if member.status != "creator" and user.id not in SUDO_USERS:
         update.effective_message.reply_text(
             "Only the chat owner can clear all notes at once.")
     else:
@@ -468,7 +468,7 @@ def rmall_callback(bot: Bot, update: Update):
     msg = update.effective_message
     member = chat.get_member(query.from_user.id)
     if query.data == 'filters_rmall':
-        if member.status == "creator" or query.from_user.id in DRAGONS:
+        if member.status == "creator" or query.from_user.id in SUDO_USERS:
             allfilters = sql.get_chat_triggers(chat.id)
             if not allfilters:
                 msg.edit_text("No filters in this chat, nothing to stop!")
