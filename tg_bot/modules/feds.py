@@ -66,7 +66,6 @@ UNFBAN_ERRORS = {
 def new_fed(bot: Bot, update: Update):
 	chat = update.effective_chat  # type: Optional[Chat]
 	user = update.effective_user  # type: Optional[User]
-        fname = update.effective_user.first_name
 	message = update.effective_message
 	if chat.type != "private":
 		update.effective_message.reply_text("Please run this command in my PM only!")
@@ -91,7 +90,7 @@ def new_fed(bot: Bot, update: Update):
 											"\n`/joinfed {}`".format(fed_name, fed_id, fed_id), parse_mode=ParseMode.MARKDOWN)
 		try:
 			bot.send_message(MESSAGE_DUMP,
-				"Federation <b>{}</b> has been created with ID: <pre>{}</pre> by <code>{}</code>/n<code{}>".format(fed_name, fed_id, user.id, fname), parse_mode=ParseMode.HTML)
+				"Federation <b>{}</b> has been created with ID: <pre>{}</pre> by <code>{}</code>/n<code{}>".format(fed_name, fed_id, user.id, user.first_name), parse_mode=ParseMode.HTML)
 		except:
 			LOGGER.warning("Cannot send a message to MESSAGE_DUMP")
 	else:
