@@ -71,7 +71,7 @@ def promote(bot: Bot, update: Update, args: List[str]) -> str:
                           can_pin_messages=bot_member.can_pin_messages,
                           can_promote_members=bot_member.can_promote_members)
 
-    message.reply_text("Successfully promoted {} in *{}*".format(mention_html(user_member.user.id, user_member.user.first_name), (chat.title)))
+    message.reply_text("Successfully promoted {} in *{}*".format(mention_html(user_member.user.id, user_member.user.first_name), (chat.title))), parse_mode=ParseMode.HTML)
     return (
         "<b>{}:</b>"
         "\n#PROMOTED"
