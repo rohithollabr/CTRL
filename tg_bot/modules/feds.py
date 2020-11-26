@@ -28,7 +28,6 @@ import tg_bot.modules.sql.feds_sql as sql
 # Time spent on feds = 10h by #MrYacha
 # Time spent on reworking on the whole feds = 22+ hours by @RealAkito
 # Time spent on updating version to v2 = 26+ hours by @AyraHikari
-#
 # Total spended for making this features is 68+ hours
 
 LOGGER.info("Original federation module by MrYacha, reworked by Mizukito Akito (@RealAkito) on Telegram.")
