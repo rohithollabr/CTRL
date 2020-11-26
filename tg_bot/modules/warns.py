@@ -12,7 +12,7 @@ from telegram.utils.helpers import mention_html
 from tg_bot import dispatcher, BAN_STICKER
 from tg_bot.modules.disable import DisableAbleCommandHandler
 from tg_bot.modules.helper_funcs.chat_status import is_user_admin, bot_admin, user_admin_no_reply, user_admin, \
-    can_restrict
+    can_restrict, user_can_warn
 from tg_bot.modules.helper_funcs.extraction import extract_text, extract_user_and_text, extract_user
 from tg_bot.modules.helper_funcs.filters import CustomFilters
 from tg_bot.modules.helper_funcs.misc import split_message
@@ -129,6 +129,7 @@ def button(bot: Bot, update: Update) -> str:
 @run_async
 @user_admin
 @can_restrict
+@user_can_warn
 @loggable
 def warn_user(bot: Bot, update: Update, args: List[str]) -> str:
     message = update.effective_message  # type: Optional[Message]
@@ -150,6 +151,7 @@ def warn_user(bot: Bot, update: Update, args: List[str]) -> str:
 @run_async
 @user_admin
 @bot_admin
+@user_can_warn
 @loggable
 def reset_warns(bot: Bot, update: Update, args: List[str]) -> str:
     message = update.effective_message  # type: Optional[Message]
