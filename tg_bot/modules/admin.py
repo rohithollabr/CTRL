@@ -126,8 +126,8 @@ def demote(bot: Bot, update: Update, args: List[str]) -> str:
                               can_restrict_members=False,
                               can_pin_messages=False,
                               can_promote_members=False)
-        message.reply_text(chat.id, f"Successfully demoted in *{chatD.title}*!", parse_mode=ParseMode.MARKDOWN)
-        return f"<b>{html.escape(chatD.title)}:</b>" \
+        message.reply_text(chat.id, f"Successfully demoted in *{chat.title}*!", parse_mode=ParseMode.MARKDOWN)
+        return f"<b>{html.escape(chat.title)}:</b>" \
                 "\n#DEMOTED" \
                f"\n<b>Admin:</b> {mention_html(user.id, user.first_name)}" \
                f"\n<b>User:</b> {mention_html(user_member.user.id, user_member.user.first_name)}"
