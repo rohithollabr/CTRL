@@ -18,7 +18,7 @@ from tg_bot.modules.helper_funcs.chat_status import (
     user_admin,
     can_pin,
 )
-from tg_bot.modules.helper_funcs.extraction import extract_user
+from tg_bot.modules.helper_funcs.extraction import extract_user, extract_user_and_text
 from tg_bot.modules.helper_funcs.admin_rights import (
     user_can_pin,
     user_can_promote,
