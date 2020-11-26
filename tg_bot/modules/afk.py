@@ -27,11 +27,7 @@ def afk(bot: Bot, update: Update):
     if user.id in (777000, 1087968824):
         return
 
-    if len(args) >= 2:
-        reason = args[1]
-    else:
-        reason = ""
-
+    reason = args[1] if len(args) >= 2 else ""
     sql.set_afk(update.effective_user.id, reason)
     fname = update.effective_user.first_name
     update.effective_message.reply_text(f"{fname} is now AFK!")
@@ -101,11 +97,10 @@ def __user_info__(user_id):
 
     text = "<b>Currently AFK</b>: {}"
     if is_afk:
-        text = text.format("Yes")
+        return text.format("Yes")
 
     else:
-        text = text.format("No")
-    return text
+        return text.format("No")
 
 
 def __gdpr__(user_id):
