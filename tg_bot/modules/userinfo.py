@@ -39,6 +39,9 @@ def about_me(bot: Bot, update: Update, args: List[str]):
 def set_about_me(bot: Bot, update: Update):
     message = update.effective_message  # type: Optional[Message]
     user_id = message.from_user.id
+    if user_id in (777000, 1087968824):
+        message.reply_text("Don't set info for Telegram bots!")
+        return
     text = message.text
     info = text.split(None, 1)  # use python's maxsplit to only remove the cmd, hence keeping newlines.
     if len(info) == 2:
@@ -80,6 +83,9 @@ def set_about_bio(bot: Bot, update: Update):
     if message.reply_to_message:
         repl_message = message.reply_to_message
         user_id = repl_message.from_user.id
+        if user_id in (777000, 1087968824):
+            message.reply_text("Don't set bio for Telegram bots!")
+            return
         if user_id == message.from_user.id:
             message.reply_text("Are you looking to change your own ... ?? That 's it.")
             return
