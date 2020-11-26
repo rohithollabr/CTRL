@@ -72,6 +72,10 @@ def gban(bot: Bot, update: Update, args: List[str]):
         message.reply_text("What you are expecting? 😗")
         return
 
+    if int(user_id) in (777000, 1087968824):
+        message.reply_text("I can't GBAN Telegram bots!")
+        return
+
     try:
         user_chat = bot.get_chat(user_id)
     except BadRequest as excp:
@@ -333,6 +337,9 @@ def __stats__():
 
 
 def __user_info__(user_id):
+    if user_id in (777000, 1087968824):
+        return ""
+
     is_gbanned = sql.is_user_gbanned(user_id)
 
     text = "Globally banned: <b>{}</b>"
