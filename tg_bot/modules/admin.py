@@ -71,11 +71,17 @@ def promote(bot: Bot, update: Update, args: List[str]) -> str:
                           can_pin_messages=bot_member.can_pin_messages,
                           can_promote_members=bot_member.can_promote_members)
 
-    message.reply_text(chat.id, f"Successfully promoted {} in {}.".format(mention_html(member.user.id, member.user.first_name), (chat.title), parse_mode=ParseMode.HTML)
-    return f"<b>{html.escape(chat.title)}:</b>\n"
-        f"#PROMOTED\n"
-        f"<b>Admin:</b> {mention_html(user.id, user.first_name)}\n"
-        f"<b>User:</b> {mention_html(user_member.user.id, user_member.user.first_name)}"
+    message.reply_text(f"Successfully promoted {} in {}.".format(mention_html(member.user.id, member.user.first_name), (chat.title), parse_mode=ParseMode.HTML)
+    return (
+        "<b>{}:</b>"
+        "\n#PROMOTED"
+        "\n<b>Admin:</b> {}"
+        "\n<b>User:</b> {}".format(
+            html.escape(chat.title),
+            mention_html(user.id, user.first_name),
+            mention_html(user_member.user.id, user_member.user.first_name),
+        )
+    )
 
 @run_async
 @bot_admin
