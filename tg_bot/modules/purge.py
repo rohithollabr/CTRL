@@ -1,13 +1,14 @@
 from tg_bot import Tclient
 from asyncio import sleep
 from tg_bot.modules.helper_funcs.Tclient.chatstatus import user_is_admin, can_delete_messages
+from telethon import events
 
 @Tclient.on(events.NewMessage(pattern="^/purge"))
 async def purge_messages(event):
     if event.from_id is None:
         return
 
-    if not await user_is_admin(user_id=event.from_id, message=event):
+    if not await user_is_admin(user_id=event.sender_id, message=event):
         await event.reply("Only Admins are allowed to use this command")
         return
 
@@ -43,7 +44,7 @@ async def delete_messages(event):
     if event.from_id is None:
         return
 
-    if not await user_is_admin(user_id=event.from_id, message=event):
+    if not await user_is_admin(user_id=event.sender_id, message=event):
         await event.reply("Only Admins are allowed to use this command")
         return
 
