@@ -41,7 +41,7 @@ async def is_user_admin(user_id: int, chat_id):
 
 async def ctrl_is_admin(chat_id: int):
     status = False
-    saitama = await telethn.get_me()
+    ctrl = await Tclient.get_me()
     async for user in Tclient.iter_participants(
             chat_id, filter=ChannelParticipantsAdmins):
         if ctrl.id == user.id:
