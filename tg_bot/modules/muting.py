@@ -217,7 +217,7 @@ def nomedia(bot: Bot, update: Update, args: List[str]) -> str:
                                      can_send_other_messages=False,
                                      can_add_web_page_previews=False)
               message.reply_text("Yep, {} is restricted from sending media in **{}**!".format(mention_html(member.user.id, member.user.first_name), html.escape(chat.title)), parse_mode=ParseMode.HTML)
-               return "<b>{}:</b>" \
+              return "<b>{}:</b>" \
                    "\n#RESTRICTED" \
                    "\n<b>• Admin:</b> {}" \
                    "\n<b>• User:</b> {}" \
