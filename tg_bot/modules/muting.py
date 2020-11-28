@@ -169,7 +169,7 @@ def temp_mute(bot: Bot, update: Update, args: List[str]) -> str:
     try:
         if member.can_send_messages is None or member.can_send_messages:
             bot.restrict_chat_member(chat.id, user_id, until_date=mutetime, can_send_messages=False)
-            message.reply_text("Muted for {}!".format(time_val))
+            message.reply_text("Muted {} for {}!".format(mention_html(member.user.id, member.user.first_name), (time_val)), parse_mode=ParseMode.HTML)
             return log
         else:
             message.reply_text("This user is already muted in {}".format(chat.title))
