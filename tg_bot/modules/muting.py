@@ -8,14 +8,12 @@ from telegram.ext.dispatcher import run_async
 from telegram.utils.helpers import mention_html
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, User, CallbackQuery
 
-from tg_bot import dispatcher, LOGGER, SUDO_USERS
+from tg_bot import dispatcher, LOGGER
 from tg_bot.modules.helper_funcs.chat_status import bot_admin, user_admin, is_user_admin, can_restrict
 from tg_bot.modules.helper_funcs.extraction import extract_user, extract_user_and_text
 from tg_bot.modules.helper_funcs.string_handling import extract_time
 from tg_bot.modules.log_channel import loggable
 
-from tg_bot.modules.translations.strings import tld
-from tg_bot.modules.connection import connected
 from tg_bot.modules.disable import DisableAbleCommandHandler
 
 
@@ -45,7 +43,7 @@ def mute(bot: Bot, update: Update, args: List[str]) -> str:
 
         elif member.can_send_messages is None or member.can_send_messages:
             bot.restrict_chat_member(chat.id, user_id, can_send_messages=False)
-            message.reply_text("Muted {} in {}!".format(mention_html(member.user.id, member.user.first_name), html.escape(chat.title)), parse_mode=ParseMode.HTML)
+            message.reply_text("Muted {} in **{}**!".format(mention_html(member.user.id, member.user.first_name), html.escape(chat.title)), parse_mode=ParseMode.HTML)
             return "<b>{}:</b>" \
                    "\n#MUTE" \
                    "\n<b>Admin:</b> {}" \
@@ -54,9 +52,9 @@ def mute(bot: Bot, update: Update, args: List[str]) -> str:
                                               mention_html(member.user.id, member.user.first_name))
 
         else:
-            message.reply_text("This user is already muted in {}".format(chat.title))
+            message.reply_text("This user is already muted in **{}**!".format(chat.title))
     else:
-        message.reply_text("This user isn't in the in {}".format(chat.title))
+        message.reply_text("This user isn't in the in **{}**!".format(chat.title))
 
     return ""
 
@@ -93,7 +91,7 @@ def unmute(bot: Bot, update: Update, args: List[str]) -> str:
                                          can_send_media_messages=True,
                                          can_send_other_messages=True,
                                          can_add_web_page_previews=True)
-                message.reply_text("Unmuted {} now he can speak back in {}!".format(mention_html(member.user.id, member.user.first_name), html.escape(chat.title)), parse_mode=ParseMode.HTML)
+                message.reply_text("Unmuted {} now he can speak back in **{}**!".format(mention_html(member.user.id, member.user.first_name), html.escape(chat.title)), parse_mode=ParseMode.HTML)
                 return "<b>{}:</b>" \
                        "\n#UNMUTE" \
                        "\n<b>Admin:</b> {}" \
@@ -172,7 +170,7 @@ def temp_mute(bot: Bot, update: Update, args: List[str]) -> str:
             message.reply_text("Muted {} for {}!".format(mention_html(member.user.id, member.user.first_name), (time_val)), parse_mode=ParseMode.HTML)
             return log
         else:
-            message.reply_text("This user is already muted in {}".format(chat.title))
+            message.reply_text("This user is already muted in **{}**!".format(chat.title))
 
     except BadRequest as excp:
         if excp.message == "Reply message not found":
@@ -197,50 +195,40 @@ def nomedia(bot: Bot, update: Update, args: List[str]) -> str:
     user = update.effective_user  # type: Optional[User]
     message = update.effective_message  # type: Optional[Message]
 
-    conn = connected(bot, update, chat, user.id)
-    if not conn == False:
-        chatD = dispatcher.bot.getChat(conn)
-    else:
-        if chat.type == "private":
-            exit(1)
-        else:
-            chatD = chat
 
     user_id = extract_user(message, args)
     if not user_id:
-        message.reply_text(tld(chat.id, "You'll need to either give me a username to restrict, or reply to someone to be restricted."))
+        message.reply_text("You'll need to either give me a username to restrict, or reply to someone to be restricted.")
         return ""
 
     if user_id == bot.id:
-        message.reply_text(tld(chat.id, "I'm not restricting myself!"))
+        message.reply_text("I'm not restricting myself!")
         return ""
 
-    member = chatD.get_member(int(user_id))
+    member = chat.get_member(int(user_id))
 
     if member:
-        if is_user_admin(chatD, user_id, member=member):
-            message.reply_text(tld(chat.id, "Afraid I can't restrict admins!"))
+        if is_user_admin(chat, user_id, member=member):
+            message.reply_text("Afraid I can't restrict admins!")
 
         elif member.can_send_messages is None or member.can_send_messages:
-            bot.restrict_chat_member(chatD.id, user_id, can_send_messages=True,
+            bot.restrict_chat_member(chat.id, int(user_id),
+                                     can_send_messages=True,
                                      can_send_media_messages=False,
                                      can_send_other_messages=False,
                                      can_add_web_page_previews=False)
-            keyboard = []
-            reply = tld(chat.id, "{} is restricted from sending media in {}!").format(mention_html(member.user.id, member.user.first_name), chatD.title)
-            message.reply_text(reply, reply_markup=keyboard, parse_mode=ParseMode.HTML)
+            message.reply_text("Yep,restricted {} from sending media in **{}**!".format(mention_html(member.user.id, member.user.first_name), html.escape(chat.title)), parse_mode=ParseMode.HTML)
             return "<b>{}:</b>" \
                    "\n#RESTRICTED" \
                    "\n<b>• Admin:</b> {}" \
                    "\n<b>• User:</b> {}" \
-                   "\n<b>• ID:</b> <code>{}</code>".format(html.escape(chatD.title),
-                                              mention_html(user.id, user.first_name),
-                                              mention_html(member.user.id, member.user.first_name), user_id)
-
+                   "\n<b>• ID:</b> <code>{}</code>".format(html.escape(chat.title),
+                                                           mention_html(user.id, user.first_name),
+                                                           mention_html(member.user.id, member.user.first_name), user_id)
         else:
-            message.reply_text(tld(chat.id, "This user is already restricted in {}!"))
+            message.reply_text("This user is already restricted in **{}**".format(chat.title))
     else:
-        message.reply_text(tld(chat.id, "This user isn't in the {}!").format(chatD.title))
+        message.reply_text("This user isn't in the **{}**!".format(chat.title))
 
     return ""
 
@@ -254,49 +242,39 @@ def media(bot: Bot, update: Update, args: List[str]) -> str:
     user = update.effective_user  # type: Optional[User]
     message = update.effective_message  # type: Optional[Message]
 
-    conn = connected(bot, update, chat, user.id)
-    if not conn == False:
-        chatD = dispatcher.bot.getChat(conn)
-    else:
-        if chat.type == "private":
-            exit(1)
-        else:
-            chatD = chat
 
     user_id = extract_user(message, args)
     if not user_id:
-        message.reply_text(tld(chat.id, "You'll need to either give me a username to unrestrict, or reply to someone to be unrestricted."))
+        message.reply_text("You'll need to either give me a username to unrestrict, or reply to someone to be unrestricted.")
         return ""
 
-    member = chatD.get_member(int(user_id))
+    member = chat.get_member(int(user_id))
     
     if member.status != "restricted":
-        message.reply_text(f"This user is already have rights to send media in {chatD.title}.")
+        message.reply_text("This user is already have rights to send media in **{}**".format(chat.title))
         return ""
 
     if member.status != 'kicked' and member.status != 'left':
         if member.can_send_messages and member.can_send_media_messages \
                 and member.can_send_other_messages and member.can_add_web_page_previews:
-            message.reply_text(tld(chat.id, "This user already has the rights to send anything in {}.").format(chatD.title))
+            message.reply_text("This user already has the rights to send anything in **{}**".format(chat.title))
         else:
-            bot.restrict_chat_member(chatD.id, int(user_id),
+            bot.restrict_chat_member(chat.id, int(user_id),
                                      can_send_messages=True,
                                      can_send_media_messages=True,
                                      can_send_other_messages=True,
                                      can_add_web_page_previews=True)
-            keyboard = []
-            reply = tld(chat.id, "Yep, {} can send media again in {}!").format(mention_html(member.user.id, member.user.first_name), chatD.title)
-            message.reply_text(reply, reply_markup=keyboard, parse_mode=ParseMode.HTML)
+            message.reply_text("Yep, now {} can send media again in **{}**!".format(mention_html(member.user.id, member.user.first_name), html.escape(chat.title)), parse_mode=ParseMode.HTML)
             return "<b>{}:</b>" \
                    "\n#UNRESTRICTED" \
                    "\n<b>• Admin:</b> {}" \
                    "\n<b>• User:</b> {}" \
-                   "\n<b>• ID:</b> <code>{}</code>".format(html.escape(chatD.title),
+                   "\n<b>• ID:</b> <code>{}</code>".format(html.escape(chat.title),
                                                            mention_html(user.id, user.first_name),
                                                            mention_html(member.user.id, member.user.first_name), user_id)
     else:
-        message.reply_text(tld(chat.id, "This user isn't even in the chat, unrestricting them won't make them send anything than they "
-                           "already do!"))
+        message.reply_text("This user isn't even in the chat, unrestricting them won't make them send anything than they "
+                           "already do!")
 
     return ""
 
@@ -311,40 +289,32 @@ def temp_nomedia(bot: Bot, update: Update, args: List[str]) -> str:
     user = update.effective_user  # type: Optional[User]
     message = update.effective_message  # type: Optional[Message]
 
-    conn = connected(bot, update, chat, user.id)
-    if not conn == False:
-        chatD = dispatcher.bot.getChat(conn)
-    else:
-        if chat.type == "private":
-            exit(1)
-        else:
-            chatD = chat
 
     user_id, reason = extract_user_and_text(message, args)
 
     if not user_id:
-        message.reply_text(tld(chat.id, "You don't seem to be referring to a user."))
+        message.reply_text("You don't seem to be referring to a user.")
         return ""
 
     try:
         member = chat.get_member(user_id)
     except BadRequest as excp:
         if excp.message == "User not found":
-            message.reply_text(tld(chat.id, "I can't seem to find this user"))
+            message.reply_text("I can't seem to find this user")
             return ""
         else:
             raise
 
     if is_user_admin(chat, user_id, member):
-        message.reply_text(tld(chat.id, "I really wish I could restrict admins..."))
+        message.reply_text("I really wish I could restrict admins...")
         return ""
 
     if user_id == bot.id:
-        message.reply_text(tld(chat.id, "I'm not gonna RESTRICT myself, are you crazy?"))
+        message.reply_text("I'm not gonna RESTRICT myself, are you crazy?")
         return ""
 
     if not reason:
-        message.reply_text(tld(chat.id, "You haven't specified a time to restrict this user for!"))
+        message.reply_text("You haven't specified a time to restrict this user for!")
         return ""
 
     split_reason = reason.split(None, 1)
@@ -376,21 +346,21 @@ def temp_nomedia(bot: Bot, update: Update, args: List[str]) -> str:
                                      can_send_media_messages=False,
                                      can_send_other_messages=False,
                                      can_add_web_page_previews=False)
-            message.reply_text(tld(chat.id, "Restricted from sending media for {} in {}!").format(time_val, chatD.title))
+            message.reply_text("Restricted from sending media for {} in **{}**!".format(time_val, chat.title))
             return log
         else:
-            message.reply_text(tld(chat.id, "This user is already restricted in {}.").format(chatD.title))
+            message.reply_text("This user is already restricted in **{}**!".format(chat.title))
 
     except BadRequest as excp:
         if excp.message == "Reply message not found":
             # Do not reply
-            message.reply_text(tld(chat.id, "Restricted for {} in {}!").format(time_val, chatD.title), quote=False)
+            message.reply_text("Restricted for {} in {}!".format(time_val, chat.title), quote=False)
             return log
         else:
             LOGGER.warning(update)
             LOGGER.exception("ERROR muting user %s in chat %s (%s) due to %s", user_id, chat.title, chat.id,
                              excp.message)
-            message.reply_text(tld(chat.id, "Well damn, I can't restrict that user."))
+            message.reply_text("Well damn, I can't restrict that user.")
 
     return ""
 
