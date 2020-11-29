@@ -212,11 +212,12 @@ def nomedia(bot: Bot, update: Update, args: List[str]) -> str:
             message.reply_text("Afraid I can't restrict admins!")
 
         elif member.can_send_messages is None or member.can_send_messages:
-            bot.restrict_chat_member(chat.id, user_id, can_send_messages=True,
+            bot.restrict_chat_member(chat.id, int(user_id),
+                                     can_send_messages=True,
                                      can_send_media_messages=False,
                                      can_send_other_messages=False,
                                      can_add_web_page_previews=False)
-                message.reply_text("Yep, {} is restricted from sending media in **{}**!".format(mention_html(member.user.id, member.user.first_name), html.escape(chat.title)), parse_mode=ParseMode.HTML)
+                message.reply_text("Yep,restricted {} from sending media in **{}**!".format(mention_html(member.user.id, member.user.first_name), html.escape(chat.title)), parse_mode=ParseMode.HTML)
                 return "<b>{}:</b>" \
                    "\n#RESTRICTED" \
                    "\n<b>• Admin:</b> {}" \
