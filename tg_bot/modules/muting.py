@@ -217,8 +217,8 @@ def nomedia(bot: Bot, update: Update, args: List[str]) -> str:
                                      can_send_media_messages=False,
                                      can_send_other_messages=False,
                                      can_add_web_page_previews=False)
-                message.reply_text("Yep,restricted {} from sending media in **{}**!".format(mention_html(member.user.id, member.user.first_name), html.escape(chat.title)), parse_mode=ParseMode.HTML)
-                return "<b>{}:</b>" \
+            message.reply_text("Yep,restricted {} from sending media in **{}**!".format(mention_html(member.user.id, member.user.first_name), html.escape(chat.title)), parse_mode=ParseMode.HTML)
+            return "<b>{}:</b>" \
                    "\n#RESTRICTED" \
                    "\n<b>• Admin:</b> {}" \
                    "\n<b>• User:</b> {}" \
@@ -264,8 +264,8 @@ def media(bot: Bot, update: Update, args: List[str]) -> str:
                                      can_send_media_messages=True,
                                      can_send_other_messages=True,
                                      can_add_web_page_previews=True)
-                message.reply_text("Yep, now {} can send media again in **{}**!".format(mention_html(member.user.id, member.user.first_name), html.escape(chat.title)), parse_mode=ParseMode.HTML)
-                return "<b>{}:</b>" \
+            message.reply_text("Yep, now {} can send media again in **{}**!".format(mention_html(member.user.id, member.user.first_name), html.escape(chat.title)), parse_mode=ParseMode.HTML)
+            return "<b>{}:</b>" \
                    "\n#UNRESTRICTED" \
                    "\n<b>• Admin:</b> {}" \
                    "\n<b>• User:</b> {}" \
