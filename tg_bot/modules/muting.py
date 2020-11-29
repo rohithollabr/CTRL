@@ -216,8 +216,8 @@ def nomedia(bot: Bot, update: Update, args: List[str]) -> str:
                                      can_send_media_messages=False,
                                      can_send_other_messages=False,
                                      can_add_web_page_previews=False)
-              message.reply_text("Yep, {} is restricted from sending media in **{}**!".format(mention_html(member.user.id, member.user.first_name), html.escape(chat.title)), parse_mode=ParseMode.HTML)
-              return "<b>{}:</b>" \
+                message.reply_text("Yep, {} is restricted from sending media in **{}**!".format(mention_html(member.user.id, member.user.first_name), html.escape(chat.title)), parse_mode=ParseMode.HTML)
+                return "<b>{}:</b>" \
                    "\n#RESTRICTED" \
                    "\n<b>• Admin:</b> {}" \
                    "\n<b>• User:</b> {}" \
@@ -247,7 +247,7 @@ def media(bot: Bot, update: Update, args: List[str]) -> str:
         message.reply_text("You'll need to either give me a username to unrestrict, or reply to someone to be unrestricted.")
         return ""
 
-    member = chatD.get_member(int(user_id))
+    member = chat.get_member(int(user_id))
     
     if member.status != "restricted":
         message.reply_text("This user is already have rights to send media in **{}**".format(chat.title))
