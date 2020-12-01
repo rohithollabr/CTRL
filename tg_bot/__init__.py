@@ -4,7 +4,7 @@ import sys
 
 import telegram.ext as tg
 from telethon import TelegramClient
-from gpytranslate import Translator
+from googletrans import Translator
 
 # enable logging
 logging.basicConfig(
