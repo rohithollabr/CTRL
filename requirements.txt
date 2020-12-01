@@ -30,7 +30,7 @@ pyowm
 PyLyrics
 spongemock
 psutil
-translator
+gpytranslate
 googletrans
 tswift
 speedtest-cli
