@@ -4,7 +4,6 @@ import sys
 
 import telegram.ext as tg
 from telethon import TelegramClient
-from googletrans import Translator
 
 # enable logging
 logging.basicConfig(
@@ -151,6 +150,3 @@ tg.CommandHandler = CustomCommandHandler
 if CUSTOM_CMD and len(CUSTOM_CMD) >= 1:
     tg.CommandHandler = CustomCommandHandler
 
-
-# Initialize Translator
-trl = Translator()
