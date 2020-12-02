@@ -276,9 +276,7 @@ def invite(bot: Bot, update: Update):
         bot_member = chat.get_member(bot.id)
         if bot_member.can_invite_users:
             invitelink = bot.exportChatInviteLink(chat.id)
-            linktext = "Invite-link generated for *{}:*".format(chat.title)
-            link = "`{}`".format(invitelink)
-            msg.reply_text(linktext, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
+            link = "Invite-link generated for *{}:*\n`{}`".format(chat.title, invitelink))
             msg.reply_text(link, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
         else:
             msg.reply_text("I don't have access to the invite link, try changing my permissions!")
