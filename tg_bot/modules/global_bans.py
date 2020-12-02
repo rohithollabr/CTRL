@@ -5,7 +5,7 @@ from typing import Optional, List
 
 from telegram import Message, Update, Bot, User, Chat, ParseMode
 from telegram.error import BadRequest, TelegramError
-from telegram.ext import run_async, CommandHandler, MessageHandler, Filters
+from telegram.ext import run_async, CommandHandler, MessageHandler, Filters, CallbackContext
 from telegram.utils.helpers import mention_html
 
 import tg_bot.modules.sql.global_bans_sql as sql
@@ -238,12 +238,36 @@ def gbanlist(bot: Bot, update: Update):
                                                 caption="Here is the list of currently gbanned users.")
 
 
-def check_and_ban(update, user_id, should_message=True):
-    if sql.is_user_gbanned(user_id):
-        update.effective_chat.kick_member(user_id)
+def gban_notification(bot: Bot, update: CallbackContext, user_info, should_message=True):
+    chat = update.effective_chat  # type: Optional[Chat]
+    msg = update.effective_message  # type: Optional[Message]
+    chat_member = user_info
+    user_r = sql.get_gbanned_user(chat_member.user.id)
+    
+    
+    gban_text = "User {} is currently globally banned and is removed from {} with an " \
+                   "immediate effect.".format(mention_html(chat_member.user.id, 
+                                                           chat_member.user.first_name 
+                                                           or "Deleted Account"), chat.title)
+    
+    if sql.is_user_gbanned(chat_member.user.id):
+        if user_r.reason:
+            gban_text += "\n<b>Reason</b>: {}".format(user_r.reason)
+                
         if should_message:
-            update.effective_message.reply_text("This is a bad person, they shouldn't be here!")
+            try:
+                msg.reply_text(gban_text, parse_mode=ParseMode.HTML)
+            except:
+                bot.send_message(chat.id, 
+                                            gban_text, parse_mode=ParseMode.HTML)
+                LOGGER.exception("Reply with gban notification.")
 
+def check_and_ban(update, user_id, should_message=True):
+    chat = update.effective_chat  # type: Optional[Chat]
+    msg = update.effective_message
+       
+    if sql.is_user_gbanned(user_id):
+        chat.kick_member(user_id)
 
 @run_async
 def enforce_gban(bot: Bot, update: Update):
