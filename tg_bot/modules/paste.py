@@ -2,7 +2,7 @@ import requests
 
 from tg_bot import dispatcher
 from tg_bot.modules.disable import DisableAbleCommandHandler
-from telegram import ParseMode, Update
+from telegram import ParseMode, Update, Bot
 from telegram.ext import run_async
 
 @run_async
