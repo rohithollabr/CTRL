@@ -271,21 +271,19 @@ def invite(bot: Bot, update: Update):
         chat = update.effective_chat
 
     if chat.username:
-        msg.reply_text("@" + chat.username)
-    elif chat.type in [chat.SUPERGROUP, chat.CHANNEL]:
+        msg.reply_text("@{}".format(chat.username))
+    elif chat.type == chat.SUPERGROUP or chat.type == chat.CHANNEL:
         bot_member = chat.get_member(bot.id)
         if bot_member.can_invite_users:
             invitelink = bot.exportChatInviteLink(chat.id)
-            msg.reply_text("Invite-link of <b>{}</b>\n\n{}".format(chat.title, invitelink), parse_mode=ParseMode.MARKDOWN)
+            linktext = "Invite-link generated for *{}:*".format(chat.title)
+            link = "`{}`".format(invitelink)
+            msg.reply_text(linktext, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
+            msg.reply_text(link, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
         else:
-            msg.reply_text(
-                "I don't have access to the invite link, try changing my permissions!"
-            )
+            msg.reply_text("I don't have access to the invite link, try changing my permissions!")
     else:
-        msg.reply_text(
-            "I can only give you invite links for supergroups and channels, sorry!"
-        )
-
+        msg.reply_text("I can only give you invite links for supergroups and channels, sorry!")
 
 @run_async
 def adminlist(bot: Bot, update: Update):
