@@ -238,7 +238,7 @@ def gbanlist(bot: Bot, update: Update):
                                                 caption="Here is the list of currently gbanned users.")
 
 
-def gban_notification(bot: Bot, update: Update, user_info, should_message=True):
+def gban_notification(update, user_info, should_message=True):
     chat = update.effective_chat  # type: Optional[Chat]
     msg = update.effective_message  # type: Optional[Message]
     chat_member = user_info
