@@ -1,5 +1,7 @@
 import requests
 
+from typing import List
+
 from tg_bot import dispatcher
 from tg_bot.modules.disable import DisableAbleCommandHandler
 from telegram import ParseMode, Update, Bot
