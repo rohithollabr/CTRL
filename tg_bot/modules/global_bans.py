@@ -5,7 +5,7 @@ from typing import Optional, List
 
 from telegram import Message, Update, Bot, User, Chat, ParseMode
 from telegram.error import BadRequest, TelegramError
-from telegram.ext import run_async, CommandHandler, MessageHandler, Filters, CallbackContext
+from telegram.ext import run_async, CommandHandler, MessageHandler, Filters
 from telegram.utils.helpers import mention_html
 
 import tg_bot.modules.sql.global_bans_sql as sql
@@ -238,7 +238,7 @@ def gbanlist(bot: Bot, update: Update):
                                                 caption="Here is the list of currently gbanned users.")
 
 
-def gban_notification(bot: Bot, update: CallbackContext, user_info, should_message=True):
+def gban_notification(bot: Bot, update: Update, user_info, should_message=True):
     chat = update.effective_chat  # type: Optional[Chat]
     msg = update.effective_message  # type: Optional[Message]
     chat_member = user_info
