@@ -32,6 +32,7 @@ spongemock
 psutil
 gpytranslate
 googletrans==3.1.0a0
+httpx[http2]
 tswift
 speedtest-cli
 bleach
