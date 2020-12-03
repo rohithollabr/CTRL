@@ -52,9 +52,9 @@ def mute(bot: Bot, update: Update, args: List[str]) -> str:
                                               mention_html(member.user.id, member.user.first_name))
 
         else:
-            message.reply_text("This user is already muted in *{}*!".format(chat.title))
+            message.reply_text("This user is already muted in <b>{}</b>!".format(chat.title), parse_mode=ParseMode.HTML)
     else:
-        message.reply_text("This user isn't in the in *{}*!".format(chat.title))
+        message.reply_text("This user isn't in the in <b>{}</b>!".format(chat.title), parse_mode=ParseMode.HTML)
 
     return ""
 
@@ -83,7 +83,7 @@ def unmute(bot: Bot, update: Update, args: List[str]) -> str:
         elif member.status != 'kicked' and member.status != 'left':
             if member.can_send_messages and member.can_send_media_messages \
                     and member.can_send_other_messages and member.can_add_web_page_previews:
-                message.reply_text("This user already has the right to speak in <b>{}</b>!".format(chat.title)), parse_mode=ParseMode.HTML)
+                message.reply_text("This user already has the right to speak in <b>{}</b>!".format(chat.title), parse_mode=ParseMode.HTML)
                 return ""
             else:
                 bot.restrict_chat_member(chat.id, int(user_id),
@@ -170,7 +170,7 @@ def temp_mute(bot: Bot, update: Update, args: List[str]) -> str:
             message.reply_text("Muted {} for <b>{}</b>!".format(mention_html(member.user.id, member.user.first_name), (time_val)), parse_mode=ParseMode.HTML)
             return log
         else:
-            message.reply_text("This user is already muted in <b>{}<b/>!".format(chat.title)), parse_mode=ParseMode.HTML)
+            message.reply_text("This user is already muted in <b>{}<b/>!".format(chat.title), parse_mode=ParseMode.HTML)
 
     except BadRequest as excp:
         if excp.message == "Reply message not found":
