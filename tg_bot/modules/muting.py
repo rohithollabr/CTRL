@@ -257,7 +257,7 @@ def media(bot: Bot, update: Update, args: List[str]) -> str:
     if member.status != 'kicked' and member.status != 'left':
         if member.can_send_messages and member.can_send_media_messages \
                 and member.can_send_other_messages and member.can_add_web_page_previews:
-            message.reply_text("This user already has the rights to send anything in <b>{}</b>".format(chat.title)), parse_mode=ParseMode.HTML)
+            message.reply_text("This user already has the rights to send anything in <b>{}</b>".format(chat.title), parse_mode=ParseMode.HTML)
         else:
             bot.restrict_chat_member(chat.id, int(user_id),
                                      can_send_messages=True,
