@@ -65,7 +65,7 @@ def check_flood(bot: Bot, update: Update) -> str:
             execstrings = "Muted for {}".format(getvalue)
             tag = "TMUTE"
         send_message(
-            message,
+            update.effective_message,
             "Great, I like to leave flooding to natural disasters but you, "
             "you were just a disappointment. {}!".format(execstrings),
         )
