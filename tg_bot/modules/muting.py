@@ -226,9 +226,9 @@ def nomedia(bot: Bot, update: Update, args: List[str]) -> str:
                                                            mention_html(user.id, user.first_name),
                                                            mention_html(member.user.id, member.user.first_name), user_id)
         else:
-            message.reply_text("This user is already restricted in <b>{}</b>!".format(chat.title)), parse_mode=ParseMode.HTML)
+            message.reply_text("This user is already restricted in <b>{}</b>!".format(chat.title), parse_mode=ParseMode.HTML)
     else:
-        message.reply_text("This user isn't in the <b>{}</b>!".format(chat.title)), parse_mode=ParseMode.HTML)
+        message.reply_text("This user isn't in the <b>{}</b>!".format(chat.title), parse_mode=ParseMode.HTML)
 
     return ""
 
@@ -349,7 +349,7 @@ def temp_nomedia(bot: Bot, update: Update, args: List[str]) -> str:
             message.reply_text("Restricted from sending media for {} in <b>{}</b>!".format(time_val, chat.title)), parse_mode=ParseMode.HTML)
             return log
         else:
-            message.reply_text("This user is already restricted in <b>{}</b>!".format(chat.title)), parse_mode=ParseMode.HTML)
+            message.reply_text("This user is already restricted in <b>{}</b>!".format(chat.title), parse_mode=ParseMode.HTML)
 
     except BadRequest as excp:
         if excp.message == "Reply message not found":
