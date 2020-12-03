@@ -3,9 +3,13 @@ from asyncio import sleep
 from tg_bot.modules.helper_funcs.Tclient.chatstatus import user_is_admin, can_delete_messages
 from telethon import events
 
-@Tclient.on(events.NewMessage(pattern="^/purge"))
+@Tclient.on(events.NewMessage(pattern="[/!]purge"))
 async def purge_messages(event):
     if event.from_id is None:
+        return
+    
+    if not event.is_group:
+        await event.reply("I don't think this is a group.")
         return
 
     if not await user_is_admin(user_id=event.sender_id, message=event):
@@ -39,9 +43,13 @@ async def purge_messages(event):
     await msg.delete()
 
 
-@Tclient.on(events.NewMessage(pattern="^/del$"))
+@Tclient.on(events.NewMessage(pattern="[/!]del"))
 async def delete_messages(event):
     if event.from_id is None:
+        return
+    
+    if not event.is_group:
+        await event.reply("I don't think this is a group.")
         return
 
     if not await user_is_admin(user_id=event.sender_id, message=event):

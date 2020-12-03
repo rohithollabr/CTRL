@@ -393,4 +393,4 @@ dispatcher.add_handler(CHECK_GBAN_HANDLER)
 dispatcher.add_handler(CLEAN_GBAN_HANDLER)
 
 if STRICT_GBAN:  # enforce GBANS if this is set
-    dispatcher.add_handler(GBAN_ENFORCER, GBAN_ENFORCE_GROUP)  
+    dispatcher.add_handler(GBAN_ENFORCER, GBAN_ENFORCE_GROUP)
