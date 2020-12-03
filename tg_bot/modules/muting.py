@@ -65,7 +65,6 @@ def mute(bot: Bot, update: Update, args: List[str]) -> str:
 @loggable
 def unmute(bot: Bot, update: Update, args: List[str]) -> str:
     chat = update.effective_chat  # type: Optional[Chat]
-    user = update.effective_user  # type: Optional[User]
     message = update.effective_message  # type: Optional[Message]
 
     user_id = extract_user(message, args)
@@ -76,11 +75,12 @@ def unmute(bot: Bot, update: Update, args: List[str]) -> str:
     member = chat.get_member(int(user_id))
 
     if member:
+        user = update.effective_user  # type: Optional[User]
         if is_user_admin(chat, user_id, member=member):
             message.reply_text("This is an admin, what do you expect me to do?")
             return ""
 
-        elif member.status != 'kicked' and member.status != 'left':
+        elif member.status not in ['kicked', 'left']:
             if member.can_send_messages and member.can_send_media_messages \
                     and member.can_send_other_messages and member.can_add_web_page_previews:
                 message.reply_text("This user already has the right to speak in <b>{}</b>!".format(chat.title), parse_mode=ParseMode.HTML)
@@ -124,12 +124,11 @@ def temp_mute(bot: Bot, update: Update, args: List[str]) -> str:
     try:
         member = chat.get_member(user_id)
     except BadRequest as excp:
-        if excp.message == "User not found":
-            message.reply_text("I can't seem to find this user")
-            return ""
-        else:
+        if excp.message != "User not found":
             raise
 
+        message.reply_text("I can't seem to find this user")
+        return ""
     if is_user_admin(chat, user_id, member):
         message.reply_text("I really wish I could mute admins...")
         return ""
@@ -145,11 +144,7 @@ def temp_mute(bot: Bot, update: Update, args: List[str]) -> str:
     split_reason = reason.split(None, 1)
 
     time_val = split_reason[0].lower()
-    if len(split_reason) > 1:
-        reason = split_reason[1]
-    else:
-        reason = ""
-
+    reason = split_reason[1] if len(split_reason) > 1 else ""
     mutetime = extract_time(message, time_val)
 
     if not mutetime:
@@ -239,7 +234,6 @@ def nomedia(bot: Bot, update: Update, args: List[str]) -> str:
 @loggable
 def media(bot: Bot, update: Update, args: List[str]) -> str:
     chat = update.effective_chat  # type: Optional[Chat]
-    user = update.effective_user  # type: Optional[User]
     message = update.effective_message  # type: Optional[Message]
 
 
@@ -249,12 +243,12 @@ def media(bot: Bot, update: Update, args: List[str]) -> str:
         return ""
 
     member = chat.get_member(int(user_id))
-    
+
     if member.status != "restricted":
         message.reply_text("This user is already have rights to send media in **{}**".format(chat.title))
         return ""
 
-    if member.status != 'kicked' and member.status != 'left':
+    if member.status not in ['kicked', 'left']:
         if member.can_send_messages and member.can_send_media_messages \
                 and member.can_send_other_messages and member.can_add_web_page_previews:
             message.reply_text("This user already has the rights to send anything in <b>{}</b>".format(chat.title), parse_mode=ParseMode.HTML)
@@ -265,6 +259,7 @@ def media(bot: Bot, update: Update, args: List[str]) -> str:
                                      can_send_other_messages=True,
                                      can_add_web_page_previews=True)
             message.reply_text("Yep, now {} can send media again in <b>{}</b>!".format(mention_html(member.user.id, member.user.first_name), html.escape(chat.title)), parse_mode=ParseMode.HTML)
+            user = update.effective_user  # type: Optional[User]
             return "<b>{}:</b>" \
                    "\n#UNRESTRICTED" \
                    "\n<b>• Admin:</b> {}" \
@@ -299,12 +294,11 @@ def temp_nomedia(bot: Bot, update: Update, args: List[str]) -> str:
     try:
         member = chat.get_member(user_id)
     except BadRequest as excp:
-        if excp.message == "User not found":
-            message.reply_text("I can't seem to find this user")
-            return ""
-        else:
+        if excp.message != "User not found":
             raise
 
+        message.reply_text("I can't seem to find this user")
+        return ""
     if is_user_admin(chat, user_id, member):
         message.reply_text("I really wish I could restrict admins...")
         return ""
@@ -320,11 +314,7 @@ def temp_nomedia(bot: Bot, update: Update, args: List[str]) -> str:
     split_reason = reason.split(None, 1)
 
     time_val = split_reason[0].lower()
-    if len(split_reason) > 1:
-        reason = split_reason[1]
-    else:
-        reason = ""
-
+    reason = split_reason[1] if len(split_reason) > 1 else ""
     mutetime = extract_time(message, time_val)
 
     if not mutetime:
@@ -379,12 +369,17 @@ def muteme(bot: Bot, update: Update, args: List[str]) -> str:
     res = bot.restrict_chat_member(chat.id, user_id, can_send_messages=False)
     if res:
         update.effective_message.reply_text("No problem, Muted!")
-        log = "<b>{}:</b>" \
-              "\n#MUTEME" \
-              "\n<b>User:</b> {}" \
-              "\n<b>ID:</b> <code>{}</code>".format(html.escape(chat.title),
-                                                    mention_html(user.id, user.first_name), user_id)
-        return log
+        return (
+            "<b>{}:</b>"
+            "\n#MUTEME"
+            "\n<b>User:</b> {}"
+            "\n<b>ID:</b> <code>{}</code>".format(
+                html.escape(chat.title),
+                mention_html(user.id, user.first_name),
+                user_id,
+            )
+        )
+
 
     else:
         update.effective_message.reply_text("Huh? I can't :/")

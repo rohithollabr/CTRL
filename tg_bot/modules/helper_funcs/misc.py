@@ -67,11 +67,8 @@ def paginate_modules(page_n: int, module_dict: Dict, prefix, chat=None) -> List:
     pairs = [modules[i * 3 : (i + 1) * 3] for i in range((len(modules) + 3 - 1) // 3)]
     round_num = len(modules) / 3
     calc = len(modules) - round(round_num)
-    if calc == 1:
+    if calc in [1, 2]:
         pairs.append((modules[-1],))
-    elif calc == 2:
-        pairs.append((modules[-1],))
-
     # can only have a certain amount of buttons side by side
     #if len(pairs) > 7:
     #    pairs = pairs[modulo_page * 7:7 * (modulo_page + 1)] + [
