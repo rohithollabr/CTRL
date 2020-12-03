@@ -117,7 +117,7 @@ def set_flood(bot: Bot, update: Update, args: List[str]) -> str:
 
     if len(args) >= 1:
         val = args[0].lower()
-        if val == "off" or val == "no" or val == "0":
+        if val in ["off", "no", "0"]:
             sql.set_flood(chat_id, 0)
             if conn:
                 text = message.reply_text(
@@ -219,7 +219,6 @@ def flood(bot: Bot, update: Update):
             )
         else:
             text = msg.reply_text("I'm not enforcing any flood control here!")
-        send_message(update.effective_message, text, parse_mode="markdown")
     else:
         if conn:
             text = msg.reply_text(
@@ -233,7 +232,8 @@ def flood(bot: Bot, update: Update):
                     limit
                 )
             )
-        send_message(update.effective_message, text, parse_mode="markdown")
+
+    send_message(update.effective_message, text, parse_mode="markdown")
 
 
 @run_async
