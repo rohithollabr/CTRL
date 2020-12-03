@@ -30,7 +30,7 @@ pyowm
 PyLyrics
 spongemock
 psutil
-gpytranslate
+translator
 googletrans==3.1.0a0
 httpx[http2]
 tswift
