@@ -80,7 +80,7 @@ def unmute(bot: Bot, update: Update, args: List[str]) -> str:
             message.reply_text("This is an admin, what do you expect me to do?")
             return ""
 
-        elif member.status not in ['kicked', 'left']:
+        elif member.status not in ['kicked', 'left', 'restricted']:
             if member.can_send_messages and member.can_send_media_messages \
                     and member.can_send_other_messages and member.can_add_web_page_previews:
                 message.reply_text("This user already has the right to speak in <b>{}</b>!".format(chat.title), parse_mode=ParseMode.HTML)
@@ -248,7 +248,7 @@ def media(bot: Bot, update: Update, args: List[str]) -> str:
         message.reply_text("This user is already have rights to send media in **{}**".format(chat.title))
         return ""
 
-    if member.status not in ['kicked', 'left']:
+    if member.status not in ['kicked', 'left', 'restricted']:
         if member.can_send_messages and member.can_send_media_messages \
                 and member.can_send_other_messages and member.can_add_web_page_previews:
             message.reply_text("This user already has the rights to send anything in <b>{}</b>".format(chat.title), parse_mode=ParseMode.HTML)
