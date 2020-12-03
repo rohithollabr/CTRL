@@ -204,7 +204,7 @@ def pin(bot: Bot, update: Update, args: List[str]) -> str:
 
     is_silent = True
     if len(args) >= 1:
-        is_silent = not args[0].lower() in ["notify", "loud", "violent"]
+        is_silent = args[0].lower() not in ["notify", "loud", "violent"]
 
     if prev_message and is_group:
         try:
@@ -272,7 +272,7 @@ def invite(bot: Bot, update: Update):
 
     if chat.username:
         msg.reply_text("@{}".format(chat.username))
-    elif chat.type == chat.SUPERGROUP or chat.type == chat.CHANNEL:
+    elif chat.type in [chat.SUPERGROUP, chat.CHANNEL]:
         bot_member = chat.get_member(bot.id)
         if bot_member.can_invite_users:
             invitelink = bot.exportChatInviteLink(chat.id)

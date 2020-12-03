@@ -100,20 +100,20 @@ def translate(bot: Bot, update: Update):
 					text = text.replace(emoji, '')
 			message = update.effective_message
 			trl = Translator()
-			if target2 == None:
+			if target2 is None:
 				detection = trl.detect(text)
 				tekstr = trl.translate(text, dest=target)
-				if tekstr.pronunciation == None:
+				if tekstr.pronunciation is None:
 					return message.reply_text("Translated from `{}` to `{}`:\n`{}`".format(detection.lang, target, tekstr.text), parse_mode=ParseMode.MARKDOWN)
 				else:
 					return message.reply_text("Translated from `{}` to `{}`:\n`{}`".format(detection.lang, target, tekstr.pronunciation), parse_mode=ParseMode.MARKDOWN)
 			else:
 				tekstr = trl.translate(text, dest=target2, src=target)
-				if tekstr.pronunciation == None:
+				if tekstr.pronunciation is None:
 					return message.reply_text("Translated from `{}` to `{}`:\n`{}`".format(target, target2, tekstr.text), parse_mode=ParseMode.MARKDOWN)
 				else:
 					return message.reply_text("Translated from `{}` to `{}`:\n`{}`".format(target, target2, tekstr.pronunciation), parse_mode=ParseMode.MARKDOWN)
-			
+
 		else:
 			args = update.effective_message.text.split(None, 2)
 			target = args[1]
@@ -129,7 +129,7 @@ def translate(bot: Bot, update: Update):
 				target = target.split("-")[0]
 			message = update.effective_message
 			trl = Translator()
-			if target2 == None:
+			if target2 is None:
 				detection = trl.detect(text)
 				tekstr = trl.translate(text, dest=target)
 				return message.reply_text("Translated from `{}` to `{}`:\n`{}`".format(detection.lang, target, tekstr.text), parse_mode=ParseMode.MARKDOWN)
@@ -144,7 +144,7 @@ def translate(bot: Bot, update: Update):
 				#	return message.reply_text("Translated from `{}` to `{}`:\n`{}`".format(target, target2, tekstr.text), parse_mode=ParseMode.MARKDOWN)
 				#else:
 				#	return message.reply_text("Translated from `{}` to `{}`:\n`{}`".format(target, target2, tekstr.pronunciation), parse_mode=ParseMode.MARKDOWN)
-				
+
 	except IndexError:
 		update.effective_message.reply_text("Reply to messages or write messages from other languages ​​for translating into the intended language\n\nExample: `/tr en-ml` to translate from English to Malayalam\nOr use: `/tr ml` for automatic detection and translating it into Malayalam", parse_mode="markdown")
 	except ValueError:
