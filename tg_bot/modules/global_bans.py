@@ -238,36 +238,12 @@ def gbanlist(bot: Bot, update: Update):
                                                 caption="Here is the list of currently gbanned users.")
 
 
-def gban_notification(update, user_info, should_message=True):
-    chat = update.effective_chat  # type: Optional[Chat]
-    msg = update.effective_message  # type: Optional[Message]
-    chat_member = user_info
-    user_r = sql.get_gbanned_user(chat_member.user.id)
-    
-    
-    gban_text = "User {} is currently globally banned and is removed from {} with an " \
-                   "immediate effect.".format(mention_html(chat_member.user.id, 
-                                                           chat_member.user.first_name 
-                                                           or "Deleted Account"), chat.title)
-    
-    if sql.is_user_gbanned(chat_member.user.id):
-        if user_r.reason:
-            gban_text += "\n<b>Reason</b>: {}".format(user_r.reason)
-                
-        if should_message:
-            try:
-                msg.reply_text(gban_text, parse_mode=ParseMode.HTML)
-            except:
-                bot.send_message(chat.id, 
-                                            gban_text, parse_mode=ParseMode.HTML)
-                LOGGER.exception("Reply with gban notification.")
-
 def check_and_ban(update, user_id, should_message=True):
-    chat = update.effective_chat  # type: Optional[Chat]
-    msg = update.effective_message
-       
     if sql.is_user_gbanned(user_id):
-        chat.kick_member(user_id)
+        update.effective_chat.kick_member(user_id)
+        if should_message:
+            update.effective_message.reply_text("This is a bad person, they shouldn't be here!")
+
 
 @run_async
 def enforce_gban(bot: Bot, update: Update):
@@ -417,4 +393,4 @@ dispatcher.add_handler(CHECK_GBAN_HANDLER)
 dispatcher.add_handler(CLEAN_GBAN_HANDLER)
 
 if STRICT_GBAN:  # enforce GBANS if this is set
-    dispatcher.add_handler(GBAN_ENFORCER, GBAN_ENFORCE_GROUP)  
+    dispatcher.add_handler(GBAN_ENFORCER, GBAN_ENFORCE_GROUP)
